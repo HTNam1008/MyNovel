@@ -12,8 +12,6 @@ const routes = require('./routes/test.route');
 
 const app = express()
 
-
-
 // init middleware
 app.use(morgan('dev'))
 app.use(helmet())
@@ -23,7 +21,6 @@ app.use(bodyParser.json());
 
 // Have Node serve the files for our built React app
 app.use(express.static(path.resolve(__dirname, '../frontend/build')));
-
 
 // init db
 

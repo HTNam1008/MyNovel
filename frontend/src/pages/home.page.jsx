@@ -1,11 +1,17 @@
 import React from 'react'
-import useSearchFetching from '../services/search.service';
+import useSearchFetching from '../services/search.service.js';
+import StoryUpdate from '../components/homePage/storyUpdate.component.jsx';
+import StoryNew from '../components/homePage/storyNew.component.jsx';
 
-function Home() {
-    const { data, loading } = useSearchFetching('/search');
+function HomePage() {
   return (
-        <ul>{data.map(item => <li>{item.title}</li>)} </ul>
+    <>
+      <h1>Home</h1>
+      <StoryUpdate/>
+      <StoryNew/>
+      {/* <ul>{data.map(item => <li>{item.title}</li>)} </ul> */}
+    </>
   );
 }
 
-export default Home
+export default HomePage

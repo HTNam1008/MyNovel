@@ -5,18 +5,19 @@ import Nav from 'react-bootstrap/Nav';
 import Navbar from 'react-bootstrap/Navbar';
 import NavDropdown from 'react-bootstrap/NavDropdown';
 import { useState } from 'react';
-// import { useHistory } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 
 const TITLE='My Novel'
 
 function Header() {
   const [searchQuery, setSearchQuery] = useState('');
-  // const history = useHistory();
+  const navigate = useNavigate();
     const handleSearch = () => {
         // Thực hiện hành động tìm kiếm với searchQuery
         console.log('Search query:', searchQuery);
         // Ví dụ: redirect hoặc thực hiện tìm kiếm trong trang hiện tại
-        // history.push(`/search?query=${searchQuery}`);
+        navigate(`/search/:${searchQuery}`);
+
       };
 
     const handleInputChange = (event) => {
@@ -27,7 +28,7 @@ function Header() {
   return (
     <Navbar expand="lg" className="bg-body-tertiary">
       <Container fluid>
-        <Navbar.Brand href="#">{TITLE}</Navbar.Brand>
+        <Navbar.Brand href="/">{TITLE}</Navbar.Brand>
         <Navbar.Toggle aria-controls="navbarScroll" />
         <Navbar.Collapse id="navbarScroll">
           <Nav
@@ -35,9 +36,9 @@ function Header() {
             style={{ maxHeight: '100px' }}
             navbarScroll
           >
-            <Nav.Link href="#action1">Home</Nav.Link>
-            <Nav.Link href="#action2">Link</Nav.Link>
-            <NavDropdown title="Link" id="navbarScrollingDropdown">
+            <Nav.Link href="#action1">List</Nav.Link>
+            <Nav.Link href="#action2">Category</Nav.Link>
+            <NavDropdown title="Setting" id="navbarScrollingDropdown">
               <NavDropdown.Item href="#action3">Action</NavDropdown.Item>
               <NavDropdown.Item href="#action4">
                 Another action
