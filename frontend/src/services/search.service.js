@@ -9,6 +9,7 @@ function useSearchFetching(url) {
         fetch(url)
             .then((res) => res.json())
             .then((data) => {
+
                 setData(data.data)
                 setLoading(false);
             })

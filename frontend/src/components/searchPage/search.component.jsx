@@ -2,12 +2,12 @@ import React from 'react'
 import { TableContainer,Table, Thead, Tr, Th, Td, Tbody } from '@chakra-ui/react';
 import {useState, useEffect} from 'react';
 import useSearchFetching from '../../services/search.service.js';
-
+import { useNavigate } from 'react-router-dom';
 
 function Search({title}) {
     console.log('Search query 3:', title )
     const [storyData, setStoryData] = useState([]);
-    const { data, loading } = useSearchFetching(`/search/${title}`);
+    const { data, loading } = useSearchFetching(`/server1/search/${title}`);
 
     useEffect(() => {
         if (!loading && data && data.length > 0) {
@@ -15,6 +15,15 @@ function Search({title}) {
             setStoryData(data.slice(0, 10));
         }
     }, [data, loading]);
+
+    const navigate = useNavigate();
+
+    const handleClick = (id) => {
+      // Thực hiện hành động khi click vào mỗi dòng
+      console.log("Item Click:", id);
+      // Ví dụ: redirect hoặc thực hiện tìm kiếm trong trang hiện tại
+      navigate(`/detail/${id}`);
+    };
   return (
     <>  
         <h2>Search Story</h2>
@@ -31,7 +40,7 @@ function Search({title}) {
                     </Thead>
                     <Tbody>
                     {storyData.map((item, index) => (
-                        <Tr key={index}>
+                        <Tr key={index} onClick={() => handleClick(item.id)}>
                             <Td>{item.title}</Td>
                             <Td>{item.categories}</Td>
                             <Td>{item.total_chapters}</Td>
