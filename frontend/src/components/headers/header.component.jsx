@@ -150,7 +150,7 @@ function Header() {
       className="bg-body-tertiary"
       style={{ padding: "0px", height: "120px" }}
     >
-      <Container fluid style={{ backgroundColor: "#DDF2FD" }}>
+      <Container fluid style={{ backgroundColor: "#DDF2FD"}}>
         <Navbar.Brand href="/">
           <img
             src={`${process.env.PUBLIC_URL}/images/title.png`}
@@ -305,7 +305,7 @@ function Header() {
             </NavDropdown>
           </Nav>
 
-          <Form className="d-flex" style={{ width: "25%" }}>
+          <Form className="d-flex" style={{ width: "25%",  paddingRight: '40px' }}>
             <Form.Control
               type="search"
               placeholder="Nhập tên truyện, tác giả, thể loại.."
