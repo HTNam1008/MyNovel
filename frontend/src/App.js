@@ -17,7 +17,7 @@ function App() {
     <ChakraProvider>
       <ThemeProvider>
         <ServerProvider>
-          <Header />
+          <Header/>
           <Routes>
             {/* Đảm bảo route cho StoryBeingRead không trùng với HomePage */}
             <Route path="/" element={<HomePage />} />

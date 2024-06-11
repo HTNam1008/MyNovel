@@ -11,9 +11,12 @@ import {
 } from "@chakra-ui/react";
 
 import useSearchFetching from "../../services/search.service.js";
+
 import { useState, useEffect } from "react";
 
 import styles from "../../assets/styles/style.css";
+
+import { useNavigate } from "react-router-dom";
 
 import { useTheme } from "../../assets/context/theme.context.js";
 
@@ -37,6 +40,12 @@ function StoryNew() {
     }
   }, [data, loading]);
 
+  const navigate = useNavigate();
+
+  const handleClick = (id) => {
+    console.log("Item Click:", id);
+    navigate(`/detail/${id}`);
+  };
   // ----- Story new End -----
   // ----- Theme -----
   const { theme } = useTheme();
@@ -98,8 +107,9 @@ function StoryNew() {
                   </Tr>
                 ))
               : storyNewData.map((item, index) => (
+
                   <Tr key={index} className="text-table-link">
-                    <Td>
+                    <Td onClick={() => handleClick(item.id)}>
                       <a
                         href="#"
                         style={{ textDecoration: "none" }}

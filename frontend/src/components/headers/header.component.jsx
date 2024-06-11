@@ -138,41 +138,145 @@ function Header() {
     };
   }, []); // useEffect sẽ chỉ chạy một lần khi component được mount
 
-  // if (error) {
-  //   return <div>Error fetching plugins: {error.message}</div>;
-  // }
-
   // ----- Get list plugins end -----
 
+  // State for header background
+  const [headerBg, setHeaderBg] = useState(
+    "linear-gradient(180deg, rgba(18, 18, 20, .68), transparent)"
+  );
+
+  // Effect to handle scroll event
+  useEffect(() => {
+    const handleScroll = () => {
+      const scrollPosition = window.scrollY;
+      const windowHeight = window.innerHeight;
+      const headerHeight = 0.55 * windowHeight;
+
+      if (scrollPosition > headerHeight) {
+        // setHeaderBg("linear-gradient(to bottom,  #64CCC5, #176B87,#053B50)");
+        setHeaderBg("linear-gradient(0, rgba(18, 18, 20, .68), transparent)");
+
+        
+      } else {
+        setHeaderBg("linear-gradient(180deg, rgba(18, 18, 20, .68), transparent)");
+      }
+    };
+
+    window.addEventListener("scroll", handleScroll);
+
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+    };
+  }, []);
+
   return (
-    <Navbar
-      expand="md"
-      className="bg-body-tertiary"
-      style={{ padding: "0px", height: "120px" }}
+    <div
+      style={{
+        position: "fixed", // Make the header float
+        top: "0",
+        left: "0",
+        width: "100%", // Full width
+        background: headerBg, // Dynamic background based on scroll position
+        zIndex: "1000", // Ensure the header is on top
+        transition: "background 0.3s ease", // Smooth transition for background change
+      }}
     >
-      <Container fluid style={{ backgroundColor: "#DDF2FD" }}>
-        <Navbar.Brand href="/">
-          <img
-            src={`${process.env.PUBLIC_URL}/images/title.png`}
-            alt={TITLE}
-            style={{ width: "120px", height: "120px" }}
-          />{" "}
-        </Navbar.Brand>
-        <Navbar.Toggle aria-controls="navbarScroll" />
-        <Navbar.Collapse id="navbarScroll">
-          <Nav
-            className="me-auto my-2 my-lg-0"
-            style={{ maxHeight: "120px", display: "flex" }}
-            navbarScroll
-          >
-            {title.map((item, index) => (
+      <Navbar
+        expand="md"
+        style={{
+          padding: "0px",
+          height: "80px",
+        }}
+      >
+        <Container fluid>
+          <Navbar.Brand href="/">
+            <img
+              src={`${process.env.PUBLIC_URL}/images/logo.png`}
+              alt={TITLE}
+              style={{ width: "80px", height: "80px",backgroundColor:'transparent' }}
+            />{" "}
+          </Navbar.Brand>
+          <Navbar.Toggle aria-controls="navbarScroll" />
+          <Navbar.Collapse id="navbarScroll">
+            <Nav
+              className="me-auto my-2 my-lg-0"
+              style={{ maxHeight: "120px", display: "flex" }}
+              navbarScroll
+            >
+              {title.map((item, index) => (
+                <NavDropdown
+                  key={index}
+                  title={
+                    <span
+                      style={{
+                        fontSize: "18px",
+                        color: "#fff",
+                        display: "inline-flex",
+                        fontFamily: 'Netflix Sans',
+                        fontWeight: "550",
+                        paddingLeft: "10px",
+                      }}
+                    >
+                      <img
+                        src={`${process.env.PUBLIC_URL}/images/menu.png`}
+                        alt=""
+                        style={{
+                          width: "20px",
+                          height: "22px",
+                          marginRight: "5px",
+                        }}
+                      />{" "}
+                      {item}
+                    </span>
+                  }
+                  id="navbarScrollingDropdown"
+                >
+                  {index === 0 &&
+                    list.map((item, index) => (
+                      <NavDropdown.Item
+                        key={index}
+                        href={`/search/${item}`}
+                        className="dropdown-item table-link"
+                      >
+                        {item}
+                      </NavDropdown.Item>
+                    ))}
+
+                  {index === 1 && (
+                    <div className="dropdown-menu-multi-column">
+                      {categories.map((item, itemIndex) => (
+                        <NavDropdown.Item
+                          key={itemIndex}
+                          href={`/search/${item}`}
+                          className="dropdown-item table-link"
+                        >
+                          {item}
+                        </NavDropdown.Item>
+                      ))}
+                    </div>
+                  )}
+
+                  {index === 2 &&
+                    chapters.map((item, index) => (
+                      <NavDropdown.Item
+                        key={index}
+                        href={`/search/${item}`}
+                        className="dropdown-item table-link"
+                      >
+                        {item}
+                      </NavDropdown.Item>
+                    ))}
+                </NavDropdown>
+              ))}
+
               <NavDropdown
-                key={index}
                 title={
                   <span
                     style={{
                       fontSize: "18px",
-                      color: "#053B50",
+                      color: "#fff",
+                      fontFamily: "Netflix Sans",
+                      fontWeight: "550",
                       display: "inline-flex",
                       paddingLeft: "10px",
                     }}
@@ -186,154 +290,100 @@ function Header() {
                         marginRight: "5px",
                       }}
                     />{" "}
-                    {item}
+                    Cài đặt
                   </span>
                 }
                 id="navbarScrollingDropdown"
+                style={{
+                  fontSize: "18px",
+                  color: "#053B50",
+                  display: "inline-flex",
+                  paddingLeft: "10px",
+                }}
               >
-                {index === 0 &&
-                  list.map((item, index) => (
-                    <NavDropdown.Item
-                      href={`/search/${item}`}
-                      className="dropdown-item table-link"
-                    >
-                      {item}
-                    </NavDropdown.Item>
-                  ))}
-
-                {index === 1 && (
-                  <div className="dropdown-menu-multi-column">
-                    {categories.map((item, itemIndex) => (
-                      <NavDropdown.Item
-                        key={itemIndex}
-                        href={`/search/${item}`}
-                        className="dropdown-item table-link"
-                      >
-                        {item}
-                      </NavDropdown.Item>
-                    ))}
+                <NavDropdown.Item className="dropdown-item table-link">
+                  <div className="d-flex align-items-center">
+                    <span className="me-2">
+                      {theme === "light" ? "Light Mode" : "Dark Mode"}
+                    </span>
+                    <Switch
+                      onChange={toggleTheme}
+                      checked={theme === "dark"}
+                      onColor="#000"
+                      offColor="#ddd"
+                      checkedIcon={false}
+                      uncheckedIcon={false}
+                      handleDiameter={10}
+                      height={15}
+                      width={30}
+                    />
                   </div>
-                )}
-
-                {index === 2 &&
-                  chapters.map((item, index) => (
-                    <NavDropdown.Item
-                      href={`/search/${item}`}
-                      className="dropdown-item table-link"
-                    >
-                      {item}
-                    </NavDropdown.Item>
-                  ))}
+                </NavDropdown.Item>
+                <NavDropdown.Item className="table-link">
+                  <div>
+                    {loadingPlugins ? (
+                      <div>Loading...</div>
+                    ) : (
+                      <div>
+                        <NavDropdown.ItemText>
+                          Server mặc định{" "}
+                        </NavDropdown.ItemText>
+                        <Form>
+                          {dataPlugins.map((plugin) => (
+                            <Form.Check
+                              key={plugin.endpoint}
+                              type="radio"
+                              label={plugin.name}
+                              name="server" // Giữ tên nhóm là "server"
+                              id={`${plugin.name}`}
+                              value={plugin.name}
+                              checked={selectedServer === plugin.name}
+                              onChange={handleServerChange}
+                            />
+                          ))}
+                        </Form>
+                      </div>
+                    )}
+                  </div>
+                </NavDropdown.Item>
               </NavDropdown>
-            ))}
+            </Nav>
 
-            <NavDropdown
-              title={
-                <span
-                  style={{
-                    fontSize: "18px",
-                    color: "#053B50",
-                    display: "inline-flex",
-                    paddingLeft: "10px",
-                  }}
-                >
-                  <img
-                    src={`${process.env.PUBLIC_URL}/images/menu.png`}
-                    alt=""
-                    style={{
-                      width: "20px",
-                      height: "22px",
-                      marginRight: "5px",
-                    }}
-                  />{" "}
-                  Cài đặt
-                </span>
-              }
-              id="navbarScrollingDropdown"
-              style={{
-                fontSize: "18px",
-                color: "#053B50",
-                display: "inline-flex",
-                paddingLeft: "10px",
-              }}
+            <Form
+              className="d-flex custom-placeholder"
+              style={{ width: "25%", paddingRight: "40px", backgroundColor:'transparent'}}
             >
-              <NavDropdown.Item className="dropdown-item table-link">
-                <div className="d-flex align-items-center">
-                  <span className="me-2">
-                    {theme === "light" ? "Light Mode" : "Dark Mode"}
-                  </span>
-                  <Switch
-                    onChange={toggleTheme}
-                    checked={theme === "dark"}
-                    onColor="#000"
-                    offColor="#ddd"
-                    checkedIcon={false}
-                    uncheckedIcon={false}
-                    handleDiameter={10}
-                    height={15}
-                    width={30}
-                  />
-                </div>
-              </NavDropdown.Item>
-              <NavDropdown.Item className="table-link">
-                <div>
-                  {loadingPlugins ? (
-                    <div>Loading...</div>
-                  ) : (
-                    <div>
-                      <NavDropdown.ItemText>
-                        Server mặc định{" "}
-                      </NavDropdown.ItemText>
-                      <Form>
-                        {dataPlugins.map((plugin) => (
-                          <Form.Check
-                            key={plugin.endpoint}
-                            type="radio"
-                            label={plugin.name}
-                            name="server" // Giữ tên nhóm là "server"
-                            id={`${plugin.name}`}
-                            value={plugin.name}
-                            checked={selectedServer === plugin.name}
-                            onChange={handleServerChange}
-                          />
-                        ))}
-                      </Form>
-                    </div>
-                  )}
-                </div>
-              </NavDropdown.Item>
-            </NavDropdown>
-          </Nav>
-
-          <Form className="d-flex" style={{ width: "25%" }}>
-            <Form.Control
-              type="search"
-              placeholder="Nhập tên truyện, tác giả, thể loại.."
-              className="me-2 w-100"
-              aria-label="Search"
-              value={searchQuery}
-              onChange={handleInputChange}
-              style={{
-                border: "1px solid #053B50", // Customize the border color and width
-                borderRadius: "20px", // Optional: Add rounded corners
-                padding: "10px", // Optional: Add padding for better look
-              }}
-            />
-            <Button
-              variant="outline-success"
-              onClick={handleSearch}
-              style={{ borderRadius: "20px", border: "1px solid #053B50" }}
-            >
-              <img
-                src={`${process.env.PUBLIC_URL}/images/search.png`}
-                alt="Search"
-                style={{ width: "30px", height: "30px" }} // Adjust the size of the image
+              <Form.Control
+                type="search"
+                placeholder="Nhập tên truyện, tác giả, thể loại.."
+                className="me-2 w-100 "
+                aria-label="Search"
+                value={searchQuery}
+                onChange={handleInputChange}
+                style={{
+                  border: "1px solid white", // Customize the border color and width
+                  borderRadius: "20px", // Optional: Add rounded corners
+                  padding: "10px", // Optional: Add padding for better look
+                  backgroundColor: "transparent", // Optional: Add background color
+                  color:"white"
+                }}
               />
-            </Button>
-          </Form>
-        </Navbar.Collapse>
-      </Container>
-    </Navbar>
+              <Button
+                variant="outline-success"
+                onClick={handleSearch}
+                style={{ borderRadius: "20px", border: "1px solid white" }}
+              >
+                <img
+                  src={`${process.env.PUBLIC_URL}/images/search.png`}
+                  alt="Search"
+                  style={{ width: "30px", height: "30px", color:"white" }} // Adjust the size of the image
+                />
+              </Button>
+            </Form>
+          </Navbar.Collapse>
+        </Container>
+      </Navbar>
+    </div>
   );
 }
 

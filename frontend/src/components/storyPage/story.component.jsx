@@ -133,8 +133,9 @@ function Story({ chapterId, title, numChapter }) {
     </div>
   );
 
+
   return (
-    <div style={{ backgroundColor: settings.backgroundColor, color: 'black', fontSize: `${settings.fontSize}px`, fontFamily: settings.fontFamily, maxWidth: `${settings.width}px`, margin: '0 auto', padding: '20px' }}>
+    <div style={{ backgroundColor: settings.backgroundColor, color: 'black', fontSize: `${settings.fontSize}px`, fontFamily: settings.fontFamily, maxWidth: `${settings.width}px`, margin: '0 auto',marginTop:'100px', padding: '20px' }}>
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px' }}>
         <div style={{ display: 'flex', alignItems: 'center', flexWrap: 'wrap' }}>
           {loadingPlugins ? (
@@ -151,9 +152,7 @@ function Story({ chapterId, title, numChapter }) {
         <Button onClick={openModal}>
           Hiển thị tùy chỉnh
         </Button>
-        <Button onClick={clearReadingState} style={{ marginLeft: '10px', backgroundColor: '#FF6347', color: 'white' }}>
-          Xóa trạng thái đọc
-        </Button>
+        
       </div>
 
       <Modal isOpen={isOpen} onClose={closeModal}>

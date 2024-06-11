@@ -75,3 +75,8 @@
 .story-being-read li span {
   margin-right: 10px;
 }
+
+.custom-placeholder ::placeholder {
+  color: white !important;
+  opacity: 0; /* Override any default opacity */
+}

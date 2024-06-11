@@ -4,6 +4,7 @@ import useDetailFetching from "../../services/detail.service.js";
 import useChapterFetching from "../../services/chapter.service.js";
 import { useNavigate } from "react-router";
 import { useServer } from "../../assets/context/server.context.js";
+import { useTheme } from "../../assets/context/theme.context.js";
 
 function vietnameseToSlug(str) {
   // Chuyển đổi chuỗi thành chữ thường
@@ -59,13 +60,15 @@ function Detail({ id }) {
     // Ví dụ: redirect hoặc thực hiện tìm kiếm trong trang hiện tại
     navigate(`/story/${chapterId}/${title}/${numChapter}`);
   };
-
+   // ----- Theme -----
+  const { theme } = useTheme();
+   // ----- Theme End -----
   return (
-    <div>
+    <div style={{marginTop:'100px'}}>
   
-      <div style={{ display: "block" }}>
-        <h2 style={{ color: "White" }}>Chi tiết truyện</h2>
-        <ul style={{ color: "White" }}>
+      <div style={{ display: "block"}}>
+        <h2 style={{ color: theme === "dark" ? "#fff" : "#000"  }}>Chi tiết truyện</h2>
+        <ul style={{ color: theme === "dark" ? "#fff" : "#000"  }}>
           <li>{dataDetail.title}</li>
           <li>{dataDetail.author}</li>
           <li>{dataDetail.categories}</li>
@@ -75,7 +78,7 @@ function Detail({ id }) {
         </ul>
 
         {/* <Button >Đọc sách</Button> */}
-        <ul style={{ color: "White" }}>
+        <ul style={{ color: theme === "dark" ? "#fff" : "#000"  }}>
           {dataChapters.map((chapter, index) => (
             <li
               key={index}
