@@ -84,7 +84,7 @@ function StoryUpdate() {
           ? Array.from({ length: 12 }).map((_, index) => (
               <Card
                 key={index}
-                bg={theme === "dark" ? "#fff" : "#1D3557"} 
+                bg={theme === "dark" ? "#DDF2FD" : "#1D3557"} 
                 color={theme === "dark" ? "#000" : "#fff"}
                 style={{
                   display: "flex",
@@ -106,7 +106,7 @@ function StoryUpdate() {
               <Card
                 className="card"
                 key={index}
-                bg={theme === "dark" ? "#fff" : "#1D3557"} 
+                bg={theme === "dark" ? "#DDF2FD" : "#1D3557"} 
                 color={theme === "dark" ? "#000" : "#fff"}
 
                 style={{

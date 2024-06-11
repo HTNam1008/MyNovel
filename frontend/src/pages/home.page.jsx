@@ -3,6 +3,7 @@ import StoryUpdate from "../components/homePage/storyUpdate.component.jsx";
 import StoryNew from "../components/homePage/storyNew.component.jsx";
 import { Container, Row, Col } from "react-bootstrap";
 import { useTheme } from "../assets/context/theme.context.js";
+import StoryBeingRead from "../components/homePage/storyBeingRead.component.jsx";
 
 function HomePage() {
   // ----- Theme -----
@@ -18,7 +19,12 @@ function HomePage() {
               <StoryUpdate />
             </Row>
             <Row>
-              <StoryNew />
+              <Col>
+                <StoryNew />
+              </Col>
+              <Col>
+                <StoryBeingRead />
+              </Col>
             </Row>
           </Col>
         </Container>

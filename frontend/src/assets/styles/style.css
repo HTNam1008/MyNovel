@@ -27,5 +27,51 @@
   }
 
   .table-link:hover {
-    color: #13ABA2; /* Thay đổi màu chữ khi hover */
+    background-color: #13ABA2 !important; /* Thay đổi màu chữ khi hover */
+    border-radius: 3px ;
   }
+  .text-table-link:hover {
+    color: #13ABA2 !important; /* Thay đổi màu chữ khi hover */
+  }
+
+  body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+  }
+  
+  
+.story-being-read {
+  max-width: 600px;
+  background-color: #f9f9f9;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.story-being-read h2 {
+  font-size: 24px;
+  margin-bottom: 20px;
+  text-align: center;
+}
+
+.story-being-read ul {
+  list-style-type: none;
+  padding: 0;
+}
+
+.story-being-read li {
+  margin-bottom: 10px;
+  cursor: pointer;
+  padding: 10px;
+  border-radius: 6px;
+  transition: background-color 0.3s ease;
+}
+
+.story-being-read li:hover {
+  background-color: #13ABA2;
+}
+
+.story-being-read li span {
+  margin-right: 10px;
+}

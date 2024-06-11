@@ -98,11 +98,10 @@ function StoryNew() {
                   </Tr>
                 ))
               : storyNewData.map((item, index) => (
-                  <Tr key={index}>
+                  <Tr key={index} className="text-table-link">
                     <Td>
                       <a
                         href="#"
-                        className={styles["table-link"]}
                         style={{ textDecoration: "none" }}
                       >
                         {item.title}

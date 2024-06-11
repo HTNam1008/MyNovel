@@ -195,7 +195,7 @@ function Header() {
                   list.map((item, index) => (
                     <NavDropdown.Item
                       href={`/search/${item}`}
-                      className="dropdown-item"
+                      className="dropdown-item table-link"
                     >
                       {item}
                     </NavDropdown.Item>
@@ -207,7 +207,7 @@ function Header() {
                       <NavDropdown.Item
                         key={itemIndex}
                         href={`/search/${item}`}
-                        className="dropdown-item"
+                        className="dropdown-item table-link"
                       >
                         {item}
                       </NavDropdown.Item>
@@ -219,7 +219,7 @@ function Header() {
                   chapters.map((item, index) => (
                     <NavDropdown.Item
                       href={`/search/${item}`}
-                      className="dropdown-item"
+                      className="dropdown-item table-link"
                     >
                       {item}
                     </NavDropdown.Item>
@@ -257,7 +257,7 @@ function Header() {
                 paddingLeft: "10px",
               }}
             >
-              <NavDropdown.Item className="dropdown-item">
+              <NavDropdown.Item className="dropdown-item table-link">
                 <div className="d-flex align-items-center">
                   <span className="me-2">
                     {theme === "light" ? "Light Mode" : "Dark Mode"}
@@ -275,7 +275,7 @@ function Header() {
                   />
                 </div>
               </NavDropdown.Item>
-              <NavDropdown.Item>
+              <NavDropdown.Item className="table-link">
                 <div>
                   {loadingPlugins ? (
                     <div>Loading...</div>

@@ -14,14 +14,55 @@ function Story({ chapterId, title, numChapter }) {
   const storyUrl = `/${_selectedServer}/story/${_chapterId}/${title}/${_numChapter}`;
   const { dataStory, loadingStory } = useStoryFetching(storyUrl);
 
-  useEffect(() => {}, [_selectedServer, _chapterId, title, _numChapter]);
+  useEffect(() => {
+    const savedState = JSON.parse(localStorage.getItem('currentReadingState')) || [];
+    if (Array.isArray(savedState)) {
+      const currentStory = savedState.find(story => story._title === title);
+      if (currentStory) {
+        setChapterId(currentStory._chapterId);
+        setNumChapter(currentStory._numChapter);
+      }
+    }
+  }, [title]);
+
+  useEffect(() => {
+    const saveStoryState = () => {
+        const savedStories = JSON.parse(localStorage.getItem('currentReadingState')) || [];
+
+        const storiesArray = Array.isArray(savedStories) ? savedStories : [];
+
+        const updatedStories = storiesArray.filter(story => story._title !== title);
+        updatedStories.push({
+            title: dataStory?.story_name,
+            numChapter: dataStory?.chapter_name,
+            _title: title,
+            _chapterId: _chapterId,
+            _numChapter: _numChapter
+        });
+
+        // Remove oldest items if the array length exceeds 10
+        while (updatedStories.length > 10) {
+            updatedStories.shift();
+        }
+
+        localStorage.setItem('currentReadingState', JSON.stringify(updatedStories));
+    };
+
+    if (dataStory) {
+      saveStoryState();
+    }
+  }, [_chapterId, _numChapter, title, dataStory]);
 
   const handlePluginClick = (pluginName) => {
     _setSelectedServer(pluginName);
   };
 
+  const clearReadingState = () => {
+    localStorage.removeItem('currentReadingState');
+  };
+
   const [dataPlugins, setDataPlugins] = useState(null);
-  const [error,setError] = useState(null);
+  const [error, setError] = useState(null);
   const [loadingPlugins, setLoading] = useState(true);
 
   useEffect(() => {
@@ -66,25 +107,19 @@ function Story({ chapterId, title, numChapter }) {
   const handleNextChapter = () => {
     setChapterId((prevChapterId) => parseInt(prevChapterId) + 1);
     setNumChapter((prevNumChapter) => {
-      // Tách phần số từ chuỗi và chuyển đổi sang số
       let num = parseInt(prevNumChapter.split('-')[1]);
-      // Tăng giá trị số lên 1
       num += 1;
-      // Ghép lại chuỗi và số và trả về kết quả
       return 'chuong-' + num;
-  });
+    });
   };
 
   const handlePreviousChapter = () => {
     setChapterId((prevChapterId) => parseInt(prevChapterId) > 1 ? parseInt(prevChapterId) - 1 : 1);
     setNumChapter((prevNumChapter) => {
-      // Tách phần số từ chuỗi và chuyển đổi sang số
       let num = parseInt(prevNumChapter.split('-')[1]);
-      // Giảm giá trị số đi 1 nếu số đó lớn hơn 1, ngược lại giữ nguyên giá trị
       num = num > 1 ? num - 1 : 1;
-      // Ghép lại chuỗi và số và trả về kết quả
       return 'chuong-' + num;
-  });
+    });
   };
 
   const navigationButtons = (
@@ -115,6 +150,9 @@ function Story({ chapterId, title, numChapter }) {
         </div>
         <Button onClick={openModal}>
           Hiển thị tùy chỉnh
+        </Button>
+        <Button onClick={clearReadingState} style={{ marginLeft: '10px', backgroundColor: '#FF6347', color: 'white' }}>
+          Xóa trạng thái đọc
         </Button>
       </div>
 

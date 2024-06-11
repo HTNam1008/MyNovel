@@ -10,6 +10,7 @@ import Footer from "./components/footers/footer.component";
 import { ChakraProvider } from "@chakra-ui/react";
 import { ThemeProvider } from "./assets/context/theme.context";
 import { ServerProvider } from "./assets/context/server.context";
+import StoryBeingRead from "./components/homePage/storyBeingRead.component";
 
 function App() {
   return (
@@ -18,7 +19,9 @@ function App() {
         <ServerProvider>
           <Header />
           <Routes>
+            {/* Đảm bảo route cho StoryBeingRead không trùng với HomePage */}
             <Route path="/" element={<HomePage />} />
+            <Route path="/reading" element={<StoryBeingRead />} />
             <Route path="/search/:title" element={<SearchPage />} />
             <Route path="/detail/:id" element={<DetailPage />} />
             <Route
