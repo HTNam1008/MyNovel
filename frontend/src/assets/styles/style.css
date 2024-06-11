@@ -1,0 +1,31 @@
+.dropdown-menu-multi-column {
+    column-gap: 20px; /* Khoảng cách giữa các cột */
+    max-height: 500px; /* Chiều cao tối đa cho menu dropdown */
+    column-count: 3; /* Số lượng cột bạn muốn hiển thị */
+    overflow-y: auto;
+  }
+  
+  .dropdown-item {
+    break-inside: avoid; /* Tránh ngắt mục giữa cột */
+  }
+
+  .dropdown-item:hover 
+  .dropdown-item:focus {
+    background-color: #13ABA2; /* Màu nền khi hover */
+  }
+
+  .card:hover .card-image {
+    transform: scale(1.1); /* Phóng to ảnh khi hover */
+  }
+  
+  .card-image {
+    transition: transform 0.3s; /* Hiệu ứng chuyển động khi hover */
+  }
+
+  .card:hover {
+    cursor: pointer; /* Thay đổi hình ảnh con trỏ của chuột thành hình chỉ tay khi hover vào thẻ Card */
+  }
+
+  .table-link:hover {
+    color: #13ABA2; /* Thay đổi màu chữ khi hover */
+  }
