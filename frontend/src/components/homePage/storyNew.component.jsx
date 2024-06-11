@@ -1,17 +1,24 @@
 import {
   TableContainer,
   Table,
+  TableCaption,
   Thead,
   Tr,
   Th,
   Td,
   Tbody,
+  Skeleton,
 } from "@chakra-ui/react";
 
 import useSearchFetching from "../../services/search.service.js";
 import { useState, useEffect } from "react";
+
+import styles from "../../assets/styles/style.css";
+
 import { useTheme } from "../../assets/context/theme.context.js";
+
 import { useServer } from "../../assets/context/server.context.js";
+
 
 function StoryNew() {
   // ----- Get Server Default -----
@@ -34,30 +41,78 @@ function StoryNew() {
   // ----- Theme -----
   const { theme } = useTheme();
   // ----- Theme End -----
+
   return (
     <div>
-      <h2 style={{ color: theme === "dark" ? "#fff" : "#000" }}>Truyện mới đăng</h2>
-      <TableContainer>
-        <Table variant="simple">
-          <Thead >
-            <Tr >
+      <h2
+        style={{
+          color: theme === "dark" ? "#fff" : "#000",
+          padding: "16px",
+          fontFamily: "Monterrat, sans-serif",
+          fontSize: "2em", // Tùy chỉnh kích thước font
+          fontWeight: "bold", // Đậm hơn
+          textDecoration: "underline",
+          textUnderlineOffset: "8px",
+          transition: "transform 0.3s, color 0.3s", // Thêm hiệu ứng chuyển động khi hover
+          ":hover": {
+            transform: "scale(1.05)", // Phóng to khi hover
+            color: "#FFD700", // Thay đổi màu khi hover
+          },
+        }}
+      >
+        Truyện mới đăng
+      </h2>
+      <TableContainer style={{ color: "#DDF2FD" }}>
+        <Table
+          variant="simple"
+          border="1px"
+          borderColor="#E2E8F0"
+          borderRadius="md"
+        >
+          <Thead bg="#13ABA2">
+            <Tr>
               <Th style={{ color: theme === "dark" ? "#fff" : "#000" }}>Tên</Th>
               <Th style={{ color: theme === "dark" ? "#fff" : "#000" }}>Thể loại</Th>
               <Th style={{ color: theme === "dark" ? "#fff" : "#000" }}>Số chương</Th>
-              <Th style={{ color: theme === "dark" ? "#fff" : "#000" }}>Lần cuối cập nhật</Th>
+              <Th style={{ color: theme === "dark" ? "#fff" : "#000" }}>
+                Lần cuối cập nhật
+              </Th>
             </Tr>
           </Thead>
-          <Tbody style={{ color: theme === "dark" ? "#fff" : "#000" }}>
-            {storyNewData.map((item, index) => (
-              <Tr key={index}>
-                <Td>
-                  <a href="#">{item.title}</a>
-                </Td>
-                <Td>{item.categories}</Td>
-                <Td>{item.total_chapters}</Td>
-                <Td>{item.time}</Td>
-              </Tr>
-            ))}
+          <Tbody style={{color: theme === "dark" ? "#fff" : "#000"}}  >
+            {loading
+              ? Array.from({ length: 5 }).map((_, index) => (
+                  <Tr key={index}>
+                    <Td>
+                      <Skeleton height="20px" />
+                    </Td>
+                    <Td>
+                      <Skeleton height="20px" />
+                    </Td>
+                    <Td>
+                      <Skeleton height="20px" />
+                    </Td>
+                    <Td>
+                      <Skeleton height="20px" />
+                    </Td>
+                  </Tr>
+                ))
+              : storyNewData.map((item, index) => (
+                  <Tr key={index}>
+                    <Td>
+                      <a
+                        href="#"
+                        className={styles["table-link"]}
+                        style={{ textDecoration: "none" }}
+                      >
+                        {item.title}
+                      </a>
+                    </Td>
+                    <Td>{item.categories}</Td>
+                    <Td>{item.total_chapters}</Td>
+                    <Td>{item.time}</Td>
+                  </Tr>
+                ))}
           </Tbody>
         </Table>
       </TableContainer>
