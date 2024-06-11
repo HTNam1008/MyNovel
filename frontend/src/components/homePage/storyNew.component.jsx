@@ -8,6 +8,7 @@ import {
   Td,
   Tbody,
   Tfoot,
+  Skeleton,
 } from "@chakra-ui/react";
 
 import useSearchFetching from "../../services/search.service.js";
@@ -53,16 +54,29 @@ function StoryNew() {
             </Tr>
           </Thead>
           <Tbody>
-            {storyNewData.map((item, index) => (
-              <Tr key={index}>
-                <Td>
-                  <a href="#" className={styles["table-link"]} style={{ textDecoration: "none", color: "#DDF2FD"}}>{item.title}</a>
-                </Td>
-                <Td>{item.categories}</Td>
-                <Td>{item.total_chapters}</Td>
-                <Td>{item.time}</Td>
-              </Tr>
-            ))}
+          {loading ? (
+              Array.from({ length: 5 }).map((_, index) => (
+                <Tr key={index}>
+                  <Td><Skeleton height="20px" /></Td>
+                  <Td><Skeleton height="20px" /></Td>
+                  <Td><Skeleton height="20px" /></Td>
+                  <Td><Skeleton height="20px" /></Td>
+                </Tr>
+              ))
+            ) : (
+              storyNewData.map((item, index) => (
+                <Tr key={index}>
+                  <Td>
+                    <a href="#" className={styles["table-link"]} style={{ textDecoration: "none", color: "#DDF2FD" }}>
+                      {item.title}
+                    </a>
+                  </Td>
+                  <Td>{item.categories}</Td>
+                  <Td>{item.total_chapters}</Td>
+                  <Td>{item.time}</Td>
+                </Tr>
+              ))
+            )}
           </Tbody>
         </Table>
       </TableContainer>

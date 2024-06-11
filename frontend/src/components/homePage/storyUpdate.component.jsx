@@ -9,6 +9,8 @@ import {
   CardBody,
   CardFooter,
   Container,
+  Skeleton,
+  SkeletonText,
 } from "@chakra-ui/react";
 
 import useSearchFetching from "../../services/search.service.js";
@@ -63,52 +65,50 @@ function StoryUpdate() {
         spacing={4}
         templateColumns="repeat(auto-fill, minmax(200px, 1fr))"
       >
-        {storyUpdateData.map((item, index) => (
-          <Card
-            className="card"
-            key={index}
-            style={{ backgroundColor: "#DDF2FD", display: "flex", flexDirection: "column", alignItems: "center", textAlign: "center",position: "relative"}}
-            onClick={() => handleClick(item.id)}
-            
-          >
-            <CardHeader style ={{paddingBottom:'0px'}}>
-              {item.is_full ? (
-                <Image src={`${process.env.PUBLIC_URL}/images/full.png`} alt="Full" boxSize="50px" style={{ position: "absolute", // Đặt vị trí của ảnh là absolute
-                  top: "0", // Căn đỉnh của ảnh với đỉnh của thẻ
-                  right: "0", // Căn phải của ảnh với phải của thẻ
-                  marginTop: "1px",
-                  marginRight: "2px", // Thêm margin phải cho ảnh
-                  
-                  }}/>
-              ) : (
-                <Image src={`${process.env.PUBLIC_URL}/images/not_full.png`} alt="Not Full" boxSize="50px" style={{ position: "absolute", // Đặt vị trí của ảnh là absolute
-                  top: "0", // Căn đỉnh của ảnh với đỉnh của thẻ
-                  right: "0", // Căn phải của ảnh với phải của thẻ
-                  marginTop: "1px",
-                  marginRight: "2px", // Thêm margin phải cho ảnh
-                  
-                  }}/>
-              )}
-              <Image
-                src={item.image}
-                alt={item.title}
-                borderRadius="lg"
-                width="200px" // Đặt chiều rộng của hình ảnh là 200px
-                height="200px" // Đặt chiều cao của hình ảnh là 200px
-                style={{border: "1px solid #053B50"}}
-                className="card-image"
-              />
-            </CardHeader>
-            <CardBody style={{ flex: 1, padding: '5px' }}>
-            <Heading size="md" mt="2">{item.title}</Heading>
-            
-            </CardBody>
-
-            {/* <CardFooter>
-                <Button  >View here</Button>
-            </CardFooter> */}
-          </Card>
-        ))}
+        {loading ? (
+          Array.from({ length: 12 }).map((_, index) => (
+            <Card
+              key={index}
+              style={{ backgroundColor: "#DDF2FD", display: "flex", flexDirection: "column", alignItems: "center", textAlign: "center", position: "relative" }}
+            >
+              <CardHeader style={{ paddingBottom: '0px' }}>
+                <Skeleton height="200px" width="200px" borderRadius="lg" />
+              </CardHeader>
+              <CardBody style={{ flex: 1, padding: '5px' }}>
+                <SkeletonText mt="4" noOfLines={1} spacing="4" />
+              </CardBody>
+            </Card>
+          ))
+        ) : (
+          storyUpdateData.map((item, index) => (
+            <Card
+              className="card"
+              key={index}
+              style={{ backgroundColor: "#DDF2FD", display: "flex", flexDirection: "column", alignItems: "center", textAlign: "center", position: "relative" }}
+              onClick={() => handleClick(item.id)}
+            >
+              <CardHeader style={{ paddingBottom: '0px' }}>
+                {item.is_full ? (
+                  <Image src={`${process.env.PUBLIC_URL}/images/full.png`} alt="Full" boxSize="50px" style={{ position: "absolute", top: "0", right: "0", marginTop: "1px", marginRight: "2px" }} />
+                ) : (
+                  <Image src={`${process.env.PUBLIC_URL}/images/not_full.png`} alt="Not Full" boxSize="50px" style={{ position: "absolute", top: "0", right: "0", marginTop: "1px", marginRight: "2px" }} />
+                )}
+                <Image
+                  src={item.image}
+                  alt={item.title}
+                  borderRadius="lg"
+                  width="200px"
+                  height="200px"
+                  style={{ border: "1px solid #053B50" }}
+                  className="card-image"
+                />
+              </CardHeader>
+              <CardBody style={{ flex: 1, padding: '5px' }}>
+                <Heading size="md" mt="2">{item.title}</Heading>
+              </CardBody>
+            </Card>
+          ))
+        )}
       </SimpleGrid>
     </>
   );
