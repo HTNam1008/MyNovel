@@ -27,7 +27,7 @@ const loadPlugins = (app) => {
       router.get("/detail/:id", (req, res) => plugin.getStoryDetail(req, res));
       router.get("/chapters/:id", (req, res) => plugin.getStoryChapters(req, res));
       router.get("/story/:chapterId/:title/:numChapter", (req, res) => plugin.getStoryContent(req, res));
-      router.get("/plugins", (req, res) => res.json({ data: plugins }));
+      // router.get("/plugins", (req, res) => res.json({ data: plugins }));
 
       app.use(`/${folder}`, router);
     });
@@ -39,6 +39,32 @@ const loadPlugins = (app) => {
   app.get('/api/plugins', (req, res) => {
     res.json({ data: plugins });
   });
+//   const WebSocket = require('ws');
+//   const wss = new WebSocket.Server({ port: 8080 });
+
+//   wss.on('connection', (ws) => {
+//   console.log('Client connected');
+
+//   // Gửi dữ liệu tới client mỗi khi có cập nhật
+//   const sendData = () => {
+//     const data = { data: {plugins} };
+//     ws.send(JSON.stringify(data));
+//   };
+
+//   // Ví dụ: Gửi dữ liệu mỗi 10 giây một lần
+//   const intervalId = setInterval(sendData, 10000);
+
+//   ws.on('close', () => {
+//     console.log('Client disconnected');
+//     clearInterval(intervalId);
+//   });
+
+//   ws.on('error', (error) => {
+//     console.error('WebSocket error:', error);
+//   });
+// });
+
+// console.log('WebSocket server is running on ws://localhost:8080');
 
   // Watch plugins folder for changes
   fs.watch(pluginsPath, (eventType, filename) => {

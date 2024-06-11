@@ -1,29 +1,31 @@
-import React, { Fragment } from "react";
-import { Button } from "@chakra-ui/react";
-import { useState, useEffect } from "react";
+import React from "react";
+
 import useDetailFetching from "../../services/detail.service.js";
 import useChapterFetching from "../../services/chapter.service.js";
 import { useNavigate } from "react-router";
+import { useServer } from "../../assets/context/server.context.js";
 
 function vietnameseToSlug(str) {
   // Chuyển đổi chuỗi thành chữ thường
   str = str.toLowerCase();
-  
+
   // Loại bỏ các ký tự đặc biệt, ký tự có dấu
-  const fromChars = "àáãạảăằắẵặẳâầấẫậẩèéẽẹẻêềếễệểìíĩịỉòóõọỏôồốỗộổơờớỡợởùúũụủưừứữựửỳýỹỵỷđ";
-  const toChars =   "aaaaaaaaaaaaaaaaaeeeeeeeeeeeiiiiiooooooooooooooooouuuuuuuuuuuyyyyyd";
-  
+  const fromChars =
+    "àáãạảăằắẵặẳâầấẫậẩèéẽẹẻêềếễệểìíĩịỉòóõọỏôồốỗộổơờớỡợởùúũụủưừứữựửỳýỹỵỷđ";
+  const toChars =
+    "aaaaaaaaaaaaaaaaaeeeeeeeeeeeiiiiiooooooooooooooooouuuuuuuuuuuyyyyyd";
+
   for (let i = 0; i < fromChars.length; i++) {
-    str = str.replace(new RegExp(fromChars.charAt(i), 'g'), toChars.charAt(i));
+    str = str.replace(new RegExp(fromChars.charAt(i), "g"), toChars.charAt(i));
   }
-  
+
   // Thay thế khoảng trắng bằng dấu gạch ngang
-  return str.replace(/\s+/g, '-');
+  return str.replace(/\s+/g, "-");
 }
 
 function getSubstringBeforeColon(inputString) {
   // Tìm vị trí của dấu ":"
-  const colonIndex = inputString.indexOf(':');
+  const colonIndex = inputString.indexOf(":");
 
   // Nếu không tìm thấy dấu ":" trong chuỗi
   if (colonIndex === -1) {
@@ -35,20 +37,32 @@ function getSubstringBeforeColon(inputString) {
   const trimmedSubstring = inputString.substring(0, colonIndex).trim();
   return trimmedSubstring;
 }
+
 function Detail({ id }) {
-  const { dataDetail, loadingDetail } = useDetailFetching(`/server1/detail/${id}`);
-  const { dataChapters, loadingChapters } = useChapterFetching(`/server1/chapters/${id}` );
+  // ----- Get Server Default -----
+  const { selectedServer } = useServer();
+  console.log("Selected Server - detail:", selectedServer);
+  // ----- Get Server Default End -----
+
+  const { dataDetail } = useDetailFetching(
+    `/${selectedServer}/detail/${id}`
+  );
+  const { dataChapters } = useChapterFetching(
+    `/${selectedServer}/chapters/${id}`
+  );
 
   const navigate = useNavigate();
 
-  const handleRead = (chapterId,title,numChapter) => {
+  const handleRead = (chapterId, title, numChapter) => {
     // Thực hiện hành động tìm kiếm với searchQuery
-    console.log("Item Click:", chapterId,title,numChapter);
+    console.log("Item Click:", chapterId, title, numChapter);
     // Ví dụ: redirect hoặc thực hiện tìm kiếm trong trang hiện tại
     navigate(`/story/${chapterId}/${title}/${numChapter}`);
-  }
+  };
 
-    return (
+  return (
+    <div>
+  
       <div style={{ display: "block" }}>
         <h2 style={{ color: "White" }}>Chi tiết truyện</h2>
         <ul style={{ color: "White" }}>
@@ -66,7 +80,11 @@ function Detail({ id }) {
             <li
               key={index}
               onClick={() => {
-                handleRead(chapter.id,vietnameseToSlug(dataDetail.title),vietnameseToSlug(getSubstringBeforeColon(chapter.title)));
+                handleRead(
+                  chapter.id,
+                  vietnameseToSlug(dataDetail.title),
+                  vietnameseToSlug(getSubstringBeforeColon(chapter.title))
+                );
               }}
             >
               {chapter.title}
@@ -74,7 +92,8 @@ function Detail({ id }) {
           ))}
         </ul>
       </div>
-    );
-  };
+    </div>
+  );
+}
 
 export default Detail;

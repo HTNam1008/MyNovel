@@ -1,0 +1,44 @@
+.settings {
+  padding: 20px;
+  border: 1px solid #ccc;
+  background-color: #f9f9f9;
+  margin-bottom: 20px;
+}
+
+.setting-group {
+  margin-bottom: 20px;
+}
+
+.theme-options, .font-options {
+  display: flex;
+  gap: 10px;
+}
+
+.theme-option, .font-option {
+  border: 1px solid #ccc;
+  padding: 5px;
+  cursor: pointer;
+}
+
+.theme-option {
+  width: 30px;
+  height: 30px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.font-option.active {
+  border-color: red;
+}
+
+.font-size-control, .width-control {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.font-size-control button, .width-control button {
+  padding: 5px;
+  cursor: pointer;
+}

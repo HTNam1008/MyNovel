@@ -1,14 +1,22 @@
-import Button from "react-bootstrap/Button";
-import Container from "react-bootstrap/Container";
-import Form from "react-bootstrap/Form";
-import Nav from "react-bootstrap/Nav";
-import Navbar from "react-bootstrap/Navbar";
-import NavDropdown from "react-bootstrap/NavDropdown";
-import { useState } from "react";
+import React, { useState, useEffect } from "react";
+import {
+  Navbar,
+  Nav,
+  NavDropdown,
+  Container,
+  Form,
+  Button,
+} from "react-bootstrap";
+import Switch from "react-switch";
 import { useNavigate } from "react-router-dom";
+import "bootstrap/dist/css/bootstrap.min.css";
+import "../../App.css";
+import { useTheme } from "../../assets/context/theme.context.js";
+import { useServer } from "../../assets/context/server.context.js";
+import WebSocketService from "../../services/webSocket.service.js";
 
 const TITLE = "My Novel";
-let title = ["Danh sách", "Thể loại", "Phân loại theo chương", "Cài đặt"];
+let title = ["Danh sách", "Thể loại", "Phân loại theo chương"];
 let list = [
   "Truyện mới cập nhật",
   "Truyện hot",
@@ -58,10 +66,15 @@ let categories = [
   "Đoản Văn",
   "Khác",
 ];
-let chapters = ["Dưới 100 chương", "100-500 chương", "500-1000 chương", "Trên 1000 chương"];
-let settings=['Mode'];
+let chapters = [
+  "Dưới 100 chương",
+  "100-500 chương",
+  "500-1000 chương",
+  "Trên 1000 chương",
+];
 
 function Header() {
+  // ----- Search query -----
   const [searchQuery, setSearchQuery] = useState("");
   const navigate = useNavigate();
   const handleSearch = () => {
@@ -74,6 +87,62 @@ function Header() {
   const handleInputChange = (event) => {
     setSearchQuery(event.target.value);
   };
+  // ----- Search query end-----
+
+  // ----- Theme -----
+  const { theme, toggleTheme } = useTheme();
+
+  // ----- Theme end -----
+
+  // ----- Set server default -----
+  const { selectedServer, setSelectedServer } = useServer();
+
+  const handleServerChange = (event) => {
+    setSelectedServer(event.target.value);
+  };
+  // ----- Set server default end -----
+
+  // ----- Get list plugins -----
+
+  const [dataPlugins, setDataPlugins] = useState(null);
+  const [error, setError] = useState(null);
+  const [loadingPlugins, setLoading] = useState(true); // Mặc định là true khi đang loading
+
+  useEffect(() => {
+    // Tạo một instance của WebSocketService
+    const webSocketService = new WebSocketService('/api/plugins');
+
+    // Xử lý sự kiện khi dữ liệu được cập nhật
+    const handleDataUpdate = (data) => {
+      setDataPlugins(data);
+      setLoading(false); // Dừng loading khi có dữ liệu
+    };
+
+    // Xử lý sự kiện khi có lỗi
+    const handleError = (error) => {
+      setError(error);
+      setLoading(false); // Dừng loading khi có lỗi
+    };
+
+    // Đăng ký các hàm callback cho WebSocketService
+    webSocketService.setDataUpdateHandler(handleDataUpdate);
+    webSocketService.setErrorHandler(handleError);
+
+    // Bắt đầu polling khi component được mount
+    webSocketService.startPolling();
+
+    // Đảm bảo rằng chúng ta dừng polling khi component unmount
+    return () => {
+      webSocketService.stopPolling();
+    };
+  }, []); // useEffect sẽ chỉ chạy một lần khi component được mount
+
+  // if (error) {
+  //   return <div>Error fetching plugins: {error.message}</div>;
+  // }
+
+
+ // ----- Get list plugins end -----
 
   return (
     <Navbar expand="md" className="bg-body-tertiary" style={{ padding: "0px" }}>
@@ -93,18 +162,78 @@ function Header() {
             navbarScroll
           >
             {title.map((item, index) => (
-            <NavDropdown key={index} title={<span>{item}</span>} id='navbarScrollingDropdown'>
-              {index===0 && list.map((item, index) => (<NavDropdown.Item href={`/search/${item}`}>{item}</NavDropdown.Item>))}
+              <NavDropdown
+                key={index}
+                title={<span>{item}</span>}
+                id="navbarScrollingDropdown"
+              >
+                {index === 0 &&
+                  list.map((item, index) => (
+                    <NavDropdown.Item key={index} href={`/search/${item}`}>
+                      {item}
+                    </NavDropdown.Item>
+                  ))}
 
-              {index===1 && categories.map((item, _index) => (
-               <NavDropdown.Item href={`/search/${item}`}>{item}</NavDropdown.Item>
-              ))}
-                
-              {index===2 && chapters.map((item, index) => (<NavDropdown.Item href={`/search/${item}`}>{item}</NavDropdown.Item>))}
+                {index === 1 &&
+                  categories.map((item, _index) => (
+                    <NavDropdown.Item key={_index} href={`/search/${item}`}>
+                      {item}
+                    </NavDropdown.Item>
+                  ))}
 
-              {index===3 && settings.map((item, index) => (<NavDropdown.Item href={`/search/${item}`}>{item}</NavDropdown.Item>))}
-
-            </NavDropdown>))}
+                {index === 2 &&
+                  chapters.map((item, index) => (
+                    <NavDropdown.Item key={index} href={`/search/${item}`}>
+                      {item}
+                    </NavDropdown.Item>
+                  ))}
+              </NavDropdown>
+            ))}
+            <NavDropdown title="Cài đặt" id="basic-nav-dropdown">
+              <NavDropdown.Item>
+                <div className="d-flex align-items-center">
+                  <span className="me-2">
+                    {theme === "light" ? "Light Mode" : "Dark Mode"}
+                  </span>
+                  <Switch
+                    onChange={toggleTheme}
+                    checked={theme === "dark"}
+                    onColor="#000"
+                    offColor="#ddd"
+                    checkedIcon={false}
+                    uncheckedIcon={false}
+                    handleDiameter={10}
+                    height={15}
+                    width={30}
+                  />
+                </div>
+              </NavDropdown.Item>
+              <NavDropdown.Item>
+                <div>
+                  {loadingPlugins ? (
+                    <div>Loading...</div>
+                  ) : (
+                    <div>
+                    <NavDropdown.ItemText>Server mặc định </NavDropdown.ItemText>
+                    <Form>
+                    {dataPlugins.map((plugin) => (
+                      <Form.Check
+                        key={plugin.endpoint}
+                        type="radio"
+                        label={plugin.name}
+                        name="server" // Giữ tên nhóm là "server"
+                        id={`${plugin.name}`}
+                        value={plugin.name}
+                        checked={selectedServer === plugin.name}
+                        onChange={handleServerChange}
+                      />
+                    ))}
+                  </Form>
+                  </div>
+                  )}
+                </div>
+              </NavDropdown.Item>
+            </NavDropdown>
           </Nav>
 
           <Form className="d-flex" style={{ width: "30%" }}>

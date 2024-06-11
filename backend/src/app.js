@@ -38,7 +38,6 @@ app.use(express.static(path.resolve(__dirname, '../frontend/build')));
 
 // Load plugins and initialize routes
 
-
 module.exports = app
 
 

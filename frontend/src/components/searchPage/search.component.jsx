@@ -3,11 +3,17 @@ import { TableContainer,Table, Thead, Tr, Th, Td, Tbody } from '@chakra-ui/react
 import {useState, useEffect} from 'react';
 import useSearchFetching from '../../services/search.service.js';
 import { useNavigate } from 'react-router-dom';
+import { useServer } from '../../assets/context/server.context.js';
 
 function Search({title}) {
+
+    // ----- Get server default -----
+    const { selectedServer } = useServer();
+
+    // ----- Get server default end -----
     console.log('Search query 3:', title )
     const [storyData, setStoryData] = useState([]);
-    const { data, loading } = useSearchFetching(`/server1/search/${title}`);
+    const { data, loading } = useSearchFetching(`/${selectedServer}/search/${title}`);
 
     useEffect(() => {
         if (!loading && data && data.length > 0) {

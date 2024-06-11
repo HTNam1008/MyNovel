@@ -3,12 +3,10 @@ import {
   Image,
   Heading,
   Text,
-  Button,
   Card,
   CardHeader,
   CardBody,
-  CardFooter,
-  Container,
+
 } from "@chakra-ui/react";
 
 import useSearchFetching from "../../services/search.service.js";
@@ -17,11 +15,20 @@ import { useState, useEffect } from "react";
 
 import { useNavigate } from 'react-router-dom';
 
+import { useTheme } from "../../assets/context/theme.context.js";
 
+import { useServer } from "../../assets/context/server.context.js";
 
 function StoryUpdate() {
+  // ----- Get Server Default -----
+  const {selectedServer}=useServer();
+  console.log('Selected Server - update:', selectedServer)
+
+  // ----- Get Server Default End -----
+
+  // ----- Story Update -----
   const [storyUpdateData, setStoryUpdateData] = useState([]);
-  const { data, loading } = useSearchFetching("/server1/search/story-update");
+  const { data, loading } = useSearchFetching(`/${selectedServer}/search/story-update`);
 
   useEffect(() => {
     if (!loading && data && data.length > 0) {
@@ -33,15 +40,20 @@ function StoryUpdate() {
     const navigate = useNavigate();
 
     const handleClick = (id) => {
-      // Thực hiện hành động tìm kiếm với searchQuery
       console.log("Item Click:", id);
-      // Ví dụ: redirect hoặc thực hiện tìm kiếm trong trang hiện tại
       navigate(`/detail/${id}`);
     };
+  // ----- Story Update End -----
+
+  // ----- Theme -----
+  const {theme}=useTheme();
+
+  // ----- Theme End -----
 
   return (
     <>
-      <h2 style={{ color: "White" }}>Truyện mới cập nhật</h2>
+      <h2 style={{ color: theme === "dark" ? "#fff" : "#000" }}>Truyện mới cập nhật</h2>
+
       <SimpleGrid
         spacing={4}
         templateColumns="repeat(auto-fill, minmax(200px, 1fr))"
@@ -49,9 +61,9 @@ function StoryUpdate() {
         {storyUpdateData.map((item, index) => (
           <Card
             key={index}
-            style={{ backgroundColor: "#DDF2FD" }}
             onClick={() => handleClick(item.id)}
-            
+            bg={theme === "dark" ? "#fff" : "#1D3557"} // Đặt màu nền tùy thuộc vào chủ đề
+            color={theme === "dark" ? "#000" : "#fff"} //
           >
             <CardHeader>
               <Image
