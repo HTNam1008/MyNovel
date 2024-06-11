@@ -17,8 +17,11 @@ function Story({ chapterId, title, numChapter }) {
 
   useEffect(() => { }, [_selectedServer, _chapterId, title, _numChapter]);
 
+  const [activeServer, setActiveServer] = useState(_selectedServer);
+
   const handlePluginClick = (pluginName) => {
     _setSelectedServer(pluginName);
+    setActiveServer(pluginName);
   };
 
   const [dataPlugins, setDataPlugins] = useState(null);
@@ -88,12 +91,34 @@ function Story({ chapterId, title, numChapter }) {
     });
   };
 
+  const [showNavigationButtons, setShowNavigationButtons] = useState(false);
+  const [lastScrollY, setLastScrollY] = useState(0);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      if (window.scrollY != lastScrollY) {
+        setShowNavigationButtons(true);
+        const timer = setTimeout(() => {
+          setShowNavigationButtons(false);
+        }, 4000); // Hide the buttons after 3 seconds
+
+        return () => clearTimeout(timer);
+      } else {
+        setShowNavigationButtons(false);
+      }
+      setLastScrollY(window.scrollY);
+    };
+
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, [lastScrollY]);
+
   const navigationButtons = (
-    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: '20px' }}>
-      <Button onClick={handlePreviousChapter} style={{ backgroundColor: '#D3EBCD', color: '#737373' }}>
+    <div style={{ display: 'flex', justifyContent: 'space-around', alignItems: 'center', marginTop: '20px' }}>
+      <Button onClick={handlePreviousChapter} style={{ backgroundColor: '#D3EBCD', color: '#737373', marginRight: '20px' }}>
         <span style={{ fontSize: '20px' }}>&larr;</span> Chương trước
       </Button>
-      <Button onClick={handleNextChapter} style={{ backgroundColor: '#80CEB1', color: 'white' }}>
+      <Button onClick={handleNextChapter} style={{ backgroundColor: '#80CEB1', color: 'white', marginLeft: '20px' }}>
         <span style={{ fontSize: '20px' }}>Chương tiếp</span> &rarr;
       </Button>
     </div>
@@ -108,7 +133,19 @@ function Story({ chapterId, title, numChapter }) {
           ) : (
             Array.isArray(dataPlugins) &&
             dataPlugins.map((plugin) => (
-              <Button key={plugin.name} onClick={() => handlePluginClick(plugin.name)} style={{ margin: '5px', backgroundColor: '#FFFF00', color: 'black', display: 'inline-block', alignItems: 'center', textAlign: 'center' }}>
+              <Button
+                key={plugin.name}
+                onClick={() => handlePluginClick(plugin.name)}
+                style={{
+                  margin: '5px',
+                  backgroundColor:
+                    activeServer === plugin.name ? '#80CEB1' : '#FFFF00',
+                  color: 'black',
+                  display: 'inline-block',
+                  alignItems: 'center',
+                  textAlign: 'center',
+                }}
+              >
                 {plugin.name}
               </Button>
             ))
@@ -152,7 +189,7 @@ function Story({ chapterId, title, numChapter }) {
         </div>
       )}
 
-      {navigationButtons}
+      {showNavigationButtons && navigationButtons}
     </div>
   );
 }
