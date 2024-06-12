@@ -10,8 +10,8 @@ function DetailPage() {
  const { theme } = useTheme();
  // ----- Theme End -----
   return (
-    <div style={{ backgroundColor: theme === "dark" ? "#1D3557" : "#fff" }}>
-      <Container className="d-flex justify-content-center">
+    <div style={{ backgroundColor: theme === "dark" ? "#1D3557" : "#DDF2FD" }}>
+      <Container >
         {" "}
         {/* Container để căn giữa homepage */}
 

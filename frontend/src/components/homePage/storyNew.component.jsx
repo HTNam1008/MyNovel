@@ -52,7 +52,7 @@ function StoryNew() {
   // ----- Theme End -----
 
   return (
-    <div>
+    <div style={{marginBottom: '50px'}}>
       <h2
         style={{
           color: theme === "dark" ? "#fff" : "#000",

@@ -14,14 +14,14 @@ function HomePage() {
   // className="d-flex justify-content-center"
   return (
     <div>
-      <div style={{ backgroundColor: theme === "dark" ? "#1D3557" : "#fff" }}>
+      <div style={{ backgroundColor: theme === "dark" ? "#1D3557" : "#DDF2FD" }}>
         <StorySlide />
         <Container >
           <Col>
             <Row>
               <StoryUpdate />
             </Row>
-            <Row>
+            <Row >
               <Col>
                 <StoryNew />
               </Col>

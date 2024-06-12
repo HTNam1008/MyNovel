@@ -26,7 +26,7 @@ const StoryBeingRead = () => {
   };
 
   return (
-    <>
+    <div style={{marginBottom: '50px'}}>
       <h2
         style={{
           color: theme === "dark" ? "#fff" : "#000",
@@ -48,7 +48,7 @@ const StoryBeingRead = () => {
       <div
         className="story-being-read"
         style={{
-          backgroundColor: theme === "dark" ? "#fff" : "#1D3557",
+          backgroundColor: theme === "dark" ? "#DDF2FD" : "#1D3557",
           color: theme === "dark" ? "#000" : "#fff",
           fontWeight: "bold",
         }}
@@ -73,7 +73,7 @@ const StoryBeingRead = () => {
           ))}
         </ul>
       </div>
-    </>
+    </div>
   );
 };
 

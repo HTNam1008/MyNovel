@@ -80,3 +80,43 @@
   color: white !important;
   opacity: 0; /* Override any default opacity */
 }
+
+/* Đặt perspective trên phần tử chứa */
+.container {
+  perspective: 300px;
+}
+
+.book {
+  position: relative;
+  transform: rotateY(-3deg);
+  -moz-transform: rotateY(-3deg);
+  -webkit-transform: rotateY(-3deg);
+  outline: 1px solid transparent;
+  box-shadow: 5px 5px 20px #333;
+  margin: 0;
+}
+
+.book::before,
+.book::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  z-index: -1; /* Đảm bảo các phần tử pseudo nằm phía sau */
+}
+
+.book::before {
+  width: 100%;
+  left: 7.5%;
+  background-color: #000;
+}
+
+.book::after {
+  width: 5%;
+  left: 100%;
+  background-color: #EFEFEF;
+  box-shadow: inset 0px 0px 5px #aaa;
+  transform: rotateY(20deg);
+  -moz-transform: rotateY(20deg);
+  -webkit-transform: rotateY(20deg);
+}
