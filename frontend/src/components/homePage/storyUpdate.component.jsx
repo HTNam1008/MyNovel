@@ -21,6 +21,7 @@ import { useServer } from "../../assets/context/server.context.js";
 
 import "../../assets/styles/style.css";
 
+import { vietnameseToSlug } from "../../utils/function.js";
 
 
 
@@ -45,9 +46,9 @@ function StoryUpdate() {
 
     const navigate = useNavigate();
 
-    const handleClick = (id) => {
+    const handleClick = (id,title) => {
       console.log("Item Click:", id);
-      navigate(`/detail/${id}`);
+      navigate(`/detail/${id}/${vietnameseToSlug(title)}`);
     };
   // ----- Story Update End -----
 
@@ -116,7 +117,7 @@ function StoryUpdate() {
                   textAlign: "center",
                   position: "relative",
                 }}
-                onClick={() => handleClick(item.id)}
+                onClick={() => handleClick(item.id, item.title)}
               >
                 <CardHeader style={{ paddingBottom: "0px" }}>
                   {item.is_full ? (

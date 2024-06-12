@@ -85,7 +85,7 @@ function Story({ chapterId, title, numChapter }) {
   // const clearReadingState = () => {
   //   localStorage.removeItem('currentReadingState');
   // };
-
+  // clearReadingState()
   // ----- get server plugin -----
   const [dataPlugins, setDataPlugins] = useState(null);
   const [error, setError] = useState(null);
@@ -220,7 +220,6 @@ function Story({ chapterId, title, numChapter }) {
         margin: "0 auto",
         marginTop: "100px",
         marginBottom: "50px",
-
         padding: "20px",
       }}
     >
@@ -286,11 +285,17 @@ function Story({ chapterId, title, numChapter }) {
             flexDirection: "column",
           }}
         >
-          <h1>{dataStory.story_name}</h1>
-          <h2>{dataStory.chapter_name}</h2>
+          <h1>{dataStory ? dataStory.story_name : 'Không tìm thấy nội dung'}</h1>
+          <h2>{dataStory?.chapter_name}</h2>
           {navigationButtons}
 
-          <div dangerouslySetInnerHTML={{ __html: dataStory.content }} />
+          {_selectedServer === 'server1' ? (
+            <div dangerouslySetInnerHTML={{ __html: dataStory?.content }} />
+          ) : (
+            <div className="pre-wrapper" >
+              <pre style={{ backgroundColor: settings.backgroundColor, color: 'black', fontSize: `${settings.fontSize}px`, fontFamily: settings.fontFamily, maxWidth: `${settings.width}px`, margin: '0 auto', padding: '20px' }}>{dataStory?.content}</pre>
+            </div>
+          )}
         </div>
       )}
 

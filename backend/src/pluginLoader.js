@@ -24,8 +24,8 @@ const loadPlugins = (app) => {
       router.get("/search/story-update", (req, res) => plugin.getStoryUpdate(req, res));
       router.get("/search/story-new", (req, res) => plugin.getStoryNew(req, res));
       router.get("/search/:title", (req, res) => plugin.searchStory(req, res));
-      router.get("/detail/:id", (req, res) => plugin.getStoryDetail(req, res));
-      router.get("/chapters/:id", (req, res) => plugin.getStoryChapters(req, res));
+      router.get("/detail/:id/:title", (req, res) => plugin.getStoryDetail(req, res));
+      router.get("/chapters/:id/:title", (req, res) => plugin.getStoryChapters(req, res));
       router.get("/story/:chapterId/:title/:numChapter", (req, res) => plugin.getStoryContent(req, res));
       // router.get("/plugins", (req, res) => res.json({ data: plugins }));
 

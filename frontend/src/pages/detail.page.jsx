@@ -5,7 +5,8 @@ import { Container } from "react-bootstrap";
 import { useTheme } from "../assets/context/theme.context.js";
 
 function DetailPage() {
-  const { id } = useParams();
+  const { id,title } = useParams();
+
  // ----- Theme -----
  const { theme } = useTheme();
  // ----- Theme End -----
@@ -15,7 +16,7 @@ function DetailPage() {
         {" "}
         {/* Container để căn giữa homepage */}
 
-        <Detail id={id} />
+        <Detail id={id} title={title} />
       </Container>
     </div>
   );

@@ -6,58 +6,28 @@ import { useNavigate } from "react-router";
 import { useServer } from "../../assets/context/server.context.js";
 import { useTheme } from "../../assets/context/theme.context.js";
 import "../../assets/styles/style.css";
+import { vietnameseToSlug, getSubstringBeforeColon } from "../../utils/function.js";
 
-function vietnameseToSlug(str) {
-  // Chuyển đổi chuỗi thành chữ thường
-  str = str.toLowerCase();
 
-  // Loại bỏ các ký tự đặc biệt, ký tự có dấu
-  const fromChars =
-    "àáãạảăằắẵặẳâầấẫậẩèéẽẹẻêềếễệểìíĩịỉòóõọỏôồốỗộổơờớỡợởùúũụủưừứữựửỳýỹỵỷđ";
-  const toChars =
-    "aaaaaaaaaaaaaaaaaeeeeeeeeeeeiiiiiooooooooooooooooouuuuuuuuuuuyyyyyd";
-
-  for (let i = 0; i < fromChars.length; i++) {
-    str = str.replace(new RegExp(fromChars.charAt(i), "g"), toChars.charAt(i));
-  }
-
-  // Thay thế khoảng trắng bằng dấu gạch ngang
-  return str.replace(/\s+/g, "-");
-}
-
-function getSubstringBeforeColon(inputString) {
-  // Tìm vị trí của dấu ":"
-  const colonIndex = inputString.indexOf(":");
-
-  // Nếu không tìm thấy dấu ":" trong chuỗi
-  if (colonIndex === -1) {
-    // Trả về chuỗi ban đầu
-    return inputString.trim();
-  }
-
-  // Lấy chuỗi con từ đầu đến vị trí của dấu ":"
-  const trimmedSubstring = inputString.substring(0, colonIndex).trim();
-  return trimmedSubstring;
-}
-
-function Detail({ id }) {
+function Detail({ id , title }) {
+  let _title = title;
   // ----- Get Server Default -----
   const { selectedServer } = useServer();
   console.log("Selected Server - detail:", selectedServer);
   // ----- Get Server Default End -----
 
-  const { dataDetail } = useDetailFetching(`/${selectedServer}/detail/${id}`);
+  const { dataDetail } = useDetailFetching(`/${selectedServer}/detail/${id}/${title}`);
   const { dataChapters } = useChapterFetching(
-    `/${selectedServer}/chapters/${id}`
+    `/${selectedServer}/chapters/${id}/${title}`
   );
 
   const navigate = useNavigate();
 
-  const handleRead = (chapterId, title, numChapter) => {
+  const handleRead = (chapterId, _title, numChapter) => {
     // Thực hiện hành động tìm kiếm với searchQuery
-    console.log("Item Click:", chapterId, title, numChapter);
+    console.log("Item Click detail:", chapterId, _title, numChapter);
     // Ví dụ: redirect hoặc thực hiện tìm kiếm trong trang hiện tại
-    navigate(`/story/${chapterId}/${title}/${numChapter}`);
+    navigate(`/story/${chapterId}/${_title}/${numChapter}`);
   };
   // ----- Theme -----
   const { theme } = useTheme();
@@ -65,14 +35,14 @@ function Detail({ id }) {
 
   // ----- Read first chapter -----
 
-  const readFirstChap = (chapterId, title) => {
+  const readFirstChap = (chapterId, _title) => {
     // Đọc chương đầu tiên
-    navigate(`/story/${chapterId}/${title}/chuong-1`);
+    navigate(`/story/${chapterId}/${_title}/chuong-1`);
   };
   // ----- Read first chapter end -----
 
   const imageUrl =
-    dataDetail.image == null
+    dataDetail?.image == null
       ? "https://www.huber-online.com/daisy_website_files/_processed_/8/0/csm_no-image_d5c4ab1322.jpg"
       : dataDetail.image;
 
@@ -120,37 +90,37 @@ function Detail({ id }) {
           </h2>
           <div
             className="story-info container"
-            style={{ padding: "0px 30px 30px 30px", display: "flex", alignItems: "center" }}
+            style={{ padding: "0px 30px 30px 30px", display: "flex", alignItems: "center"}}
           >
             <div className="book" style={{ marginRight: "50px" }}>
               <img
                 src={imageUrl}
-                alt={dataDetail.title}
+                alt={dataDetail?.title}
                 style={{ height: "auto", width: "250px", borderRadius: "5px" }}
               />
             </div>
-            <div style={{ flex: 1, padding: "100px" }}>
+            <div style={{ flex: 1, padding: "100px" , color: theme === "dark" ? "#000" : "#fff" }}>
               <h2 className="story-title" style={{ padding: "20px 30px" }}>
-                {dataDetail.title}
+                {dataDetail?.title}
               </h2>
-              <ul style={{ listStyleType: "none", fontSize: "20px" }}>
-                <li>
-                  Tác giả: <b>{dataDetail.author}</b>
+              <ul >
+                <li >
+                  Tác giả: <b style={{color: theme === "dark" ? "#000" : "#fff" }}>{dataDetail?.author}</b>
                 </li>
-                <li>
-                  Thể loại: <b>{dataDetail.categories}</b>
+                <li >
+                  Thể loại: <b style={{color: theme === "dark" ? "#000" : "#fff" }}>{dataDetail?.categories}</b>
                 </li>
-                <li>
-                  Tình trạng: <b>{dataDetail.status}</b>
+                <li >
+                  Tình trạng: <b style={{color: theme === "dark" ? "#000" : "#fff" }}>{dataDetail?.status}</b>
                 </li>
-                <li>
-                  Cập nhật: <b>{dataDetail.time}</b>
+                <li >
+                  Cập nhật: <b style={{color: theme === "dark" ? "#000" : "#fff" }}>{dataDetail?.time}</b>
                 </li>
                 <Button
                   onClick={() =>
                     readFirstChap(
                       dataChapters[0].id,
-                      vietnameseToSlug(dataDetail.title)
+                      _title
                     )
                   }
                   style={{ cursor: "pointer", marginTop: "20px" }}
@@ -160,12 +130,12 @@ function Detail({ id }) {
               </ul>
             </div>
           </div>
-          <h4 style={{ color: "#DDF2FD", margin: "20px 0" }}>Giới thiệu</h4>
+          <h4 style={{ color: theme === "dark" ? "#000" : "#DDF2FD", margin: "20px 0" }}>Giới thiệu</h4>
           <div
             className="story-description"
-            dangerouslySetInnerHTML={{ __html: dataDetail.description }}
+            dangerouslySetInnerHTML={{ __html: dataDetail?.description }}
           />
-          <h4 style={{ color: "#DDF2FD", margin: "40px 0 20px" }}>
+          <h4 style={{ color: theme === "dark" ? "#000" : "#DDF2FD", margin: "40px 0 20px" }}>
             Danh sách chương
           </h4>
           <ul
@@ -177,13 +147,13 @@ function Detail({ id }) {
               backgroundColor: "rgba(255, 255, 255, 0.1)",
             }}
           >
-            {dataChapters.map((chapter, index) => (
+            {dataChapters?.map((chapter, index) => (
               <li
                 key={index}
                 onClick={() =>
                   handleRead(
                     chapter.id,
-                    vietnameseToSlug(dataDetail.title),
+                    _title,
                     vietnameseToSlug(getSubstringBeforeColon(chapter.title))
                   )
                 }

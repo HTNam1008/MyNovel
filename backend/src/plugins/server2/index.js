@@ -163,7 +163,7 @@ const getStoryUpdate = async (req, res) => {
     });
 
     res.json({data: bookResults}); // Trả về dữ liệu cho client
-    console.log("update: ",bookResults);
+    // console.log("update: ",bookResults);
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: "Error fetching data" });
@@ -205,7 +205,7 @@ const getStoryNew = async (req, res) => {
     });
 
     res.json({data: bookResults}); // Trả về dữ liệu cho client
-    console.log("new: ",bookResults);
+    // console.log("new: ",bookResults);
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: "Error fetching data" });
@@ -254,15 +254,15 @@ const getStoryFinish = async (req, res) => {
 
 const getStoryDetail = async (req, res) => {
   try {
-    const id = req.params.id; // toan-chuc-phap-su
-    const url = `${BASE_URL}/doc-truyen/${id}`;
+    const storyName = req.params.title; 
+    const url = `${BASE_URL}/doc-truyen/${storyName}`;
     const html = await fetchHTML(url);
     const $ = cheerio.load(html);
 
     const regex = /\d+/g;
     const bookInfo = $('.book-information');
 
-    let imageUrl = bookInfo.find('#book-img img').attr('src');
+    let imageUrl = bookInfo.find('.book-img img').attr('src');
     let title = bookInfo.find('.book-info ').find('h1').text();
     let authorName = bookInfo.find('.tag a:first').text();
     let status = bookInfo.find('.tag span').text();
@@ -273,7 +273,6 @@ const getStoryDetail = async (req, res) => {
     let time = timeStr.substring(timeStr.indexOf(" ") + 1);
 
     const bookResult = {
-      data: {
         title: title,
         image: imageUrl,
         total_chapters: chapters,
@@ -282,11 +281,10 @@ const getStoryDetail = async (req, res) => {
         status: status,
         time: getTimeDifference(time),
         description: intro
-      }
     };
 
     //console.log(bookResult);
-    res.json(bookResult); // Trả về dữ liệu cho client
+    res.json({data:bookResult}); // Trả về dữ liệu cho client
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: "Error fetching data" });
@@ -295,8 +293,8 @@ const getStoryDetail = async (req, res) => {
 
 const getStoryChapters = async (req, res) => {
   try {
-    const id = req.params.id; // chuong-1
-    const url = `${BASE_URL}/doc-truyen/${id}`;
+    const storyName = req.params.title; 
+    const url = `${BASE_URL}/doc-truyen/${storyName}`;
     const html = await fetchHTML(url);
     const $ = cheerio.load(html);
     const chapterTitles = [];
@@ -309,8 +307,9 @@ const getStoryChapters = async (req, res) => {
         title: "Chương " + i.toString()
       });
     }
+
     //console.log(chapterTitles);
-    res.json(chapterTitles); // Trả về dữ liệu cho client
+    res.json({data:chapterTitles}); // Trả về dữ liệu cho client
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: "Error fetching data" });

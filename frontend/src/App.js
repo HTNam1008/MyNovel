@@ -23,7 +23,7 @@ function App() {
             <Route path="/" element={<HomePage />} />
             <Route path="/reading" element={<StoryBeingRead />} />
             <Route path="/search/:title" element={<SearchPage />} />
-            <Route path="/detail/:id" element={<DetailPage />} />
+            <Route path="/detail/:id/:title" element={<DetailPage />} />
             <Route
               path="/story/:chapterId/:title/:numChapter"
               element={<StoryPage />}
