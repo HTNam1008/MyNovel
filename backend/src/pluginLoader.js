@@ -6,15 +6,20 @@ const express = require("express");
 let currentProxy = "";
 
 const loadPlugins = (app) => {
-  const pluginsPath = path.join(__dirname, "plugins");
-  let plugins = [];
+  const pluginsPathServer = path.join(__dirname, "plugins/server");
+  let pluginsServer = [];
 
-  const loadAllPlugins = () => {
-    plugins = []; // Reset plugins array
-    fs.readdirSync(pluginsPath).forEach((folder) => {
-      const plugin = require(path.join(pluginsPath, folder));
-      serviceRegistry.registerService(plugin.name, plugin);
-      plugins.push({
+  const pluginsPathExport = path.join(__dirname, "plugins/export");
+  let pluginsExport = [];
+
+  const loadAllPluginsServer = () => {
+    pluginsServer = []; // Reset plugins array
+
+    fs.readdirSync(pluginsPathServer).forEach((folder) => {
+      
+      const plugin = require(path.join(pluginsPathServer, folder));
+      serviceRegistry.registerService(pluginsPathServer, plugin);
+      pluginsServer.push({
         name: plugin.name,
         endpoint: `/${folder}`,
       });
@@ -27,53 +32,76 @@ const loadPlugins = (app) => {
       router.get("/detail/:id/:title", (req, res) => plugin.getStoryDetail(req, res));
       router.get("/chapters/:id/:title", (req, res) => plugin.getStoryChapters(req, res));
       router.get("/story/:chapterId/:title/:numChapter", (req, res) => plugin.getStoryContent(req, res));
-      // router.get("/plugins", (req, res) => res.json({ data: plugins }));
+
 
       app.use(`/${folder}`, router);
     });
   };
 
-  loadAllPlugins();
 
-  // API để lấy danh sách plugins
-  app.get('/api/plugins', (req, res) => {
-    res.json({ data: plugins });
+  loadAllPluginsServer();
+
+  const loadAllPluginsExport = () => {
+    pluginsExport = []; // Reset plugins array
+
+    fs.readdirSync(pluginsPathExport).forEach((folder) => {
+      const plugin = require(path.join(pluginsPathExport, folder));
+      serviceRegistry.registerService(pluginsPathExport, plugin);
+      pluginsExport.push({
+        name: plugin.name,
+        endpoint: `/${folder}`,
+      });
+
+      const router = express.Router();
+      
+      // router.post("/:server/:id", (req, res) => plugin.exportStory(req, res));
+      router.post("/:server/:id/:title", async (req, res) => {
+        // Kiểm tra nếu tên folder của plugin export trùng với tham số :server
+          try {
+            // Lấy dữ liệu từ plugin server
+            const pluginServer = require(path.join(pluginsPathServer, req.params.server));
+            const storyData = await pluginServer.getStoryDownload(req, res);
+            // Sau khi có dữ liệu, gọi hàm exportStory từ plugin export
+            await plugin.exportStory(storyData, req, res);
+          } catch (error) {
+            console.error(error);
+            res.status(500).json({ error: "Error exporting story" });
+          }
+      });
+      // app.use(`/${folder}`, router);
+      app.use(`/${folder}`,router)
+    });
+  };
+
+
+  loadAllPluginsServer();
+
+  loadAllPluginsExport();
+
+  // API để lấy danh sách plugins server
+  app.get('/api/plugins/server', (req, res) => {
+    res.json({ data: pluginsServer });
   });
-//   const WebSocket = require('ws');
-//   const wss = new WebSocket.Server({ port: 8080 });
 
-//   wss.on('connection', (ws) => {
-//   console.log('Client connected');
-
-//   // Gửi dữ liệu tới client mỗi khi có cập nhật
-//   const sendData = () => {
-//     const data = { data: {plugins} };
-//     ws.send(JSON.stringify(data));
-//   };
-
-//   // Ví dụ: Gửi dữ liệu mỗi 10 giây một lần
-//   const intervalId = setInterval(sendData, 10000);
-
-//   ws.on('close', () => {
-//     console.log('Client disconnected');
-//     clearInterval(intervalId);
-//   });
-
-//   ws.on('error', (error) => {
-//     console.error('WebSocket error:', error);
-//   });
-// });
-
-// console.log('WebSocket server is running on ws://localhost:8080');
-
-  // Watch plugins folder for changes
-  fs.watch(pluginsPath, (eventType, filename) => {
+  // API để lấy danh sách plugins export
+  app.get('/api/plugins/export', (req, res) => {
+    res.json({ data: pluginsExport });
+  });
+  
+  // Watch plugins server folder for changes
+  fs.watch(pluginsPathServer, (eventType, filename) => {
     if (filename && (eventType === 'rename' || eventType === 'change')) {
-      loadAllPlugins();
+      loadAllPluginsServer();
     }
   });
 
-  console.log("Plugins loaded");
+  // Watch plugins export folder for changes
+  fs.watch(pluginsPathExport, (eventType, filename) => {
+    if (filename && (eventType === 'rename' || eventType === 'change')) {
+      loadAllPluginsExport();
+    }
+  });
+
 };
 
 module.exports = {

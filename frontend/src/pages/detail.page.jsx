@@ -11,7 +11,7 @@ function DetailPage() {
  const { theme } = useTheme();
  // ----- Theme End -----
   return (
-    <div style={{ backgroundColor: theme === "dark" ? "#1D3557" : "#DDF2FD" }}>
+    <div style={{ backgroundColor: theme === "dark" ? "#1D3557" : "#E3F4F4" }}>
       <Container >
         {" "}
         {/* Container để căn giữa homepage */}

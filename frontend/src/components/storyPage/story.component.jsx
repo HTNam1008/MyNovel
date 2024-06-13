@@ -92,7 +92,7 @@ function Story({ chapterId, title, numChapter }) {
   const [loadingPlugins, setLoading] = useState(true);
 
   useEffect(() => {
-    const webSocketService = new WebSocketService("/api/plugins");
+    const webSocketService = new WebSocketService("/api/plugins/server");
     webSocketService.startPolling();
     const handleDataUpdate = (data) => {
       setDataPlugins(data);
