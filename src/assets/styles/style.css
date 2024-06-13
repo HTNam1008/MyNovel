@@ -1,0 +1,248 @@
+.dropdown-menu-multi-column {
+  column-gap: 20px;
+  /* Khoảng cách giữa các cột */
+  max-height: 500px;
+  /* Chiều cao tối đa cho menu dropdown */
+  column-count: 3;
+  /* Số lượng cột bạn muốn hiển thị */
+  overflow-y: auto;
+}
+
+.dropdown-item {
+  break-inside: avoid;
+  /* Tránh ngắt mục giữa cột */
+}
+
+.dropdown-item:hover .dropdown-item:focus {
+  background-color: #13ABA2;
+  /* Màu nền khi hover */
+}
+
+.card:hover .card-image {
+  transform: scale(1.1);
+  /* Phóng to ảnh khi hover */
+}
+
+.card-image {
+  transition: transform 0.3s;
+  /* Hiệu ứng chuyển động khi hover */
+}
+
+.card:hover {
+  cursor: pointer;
+  /* Thay đổi hình ảnh con trỏ của chuột thành hình chỉ tay khi hover vào thẻ Card */
+}
+
+.table-link:hover {
+  background-color: #13ABA2 !important;
+  /* Thay đổi màu chữ khi hover */
+  border-radius: 3px;
+}
+
+.text-table-link:hover {
+  color: #13ABA2 !important;
+  /* Thay đổi màu chữ khi hover */
+}
+
+body {
+  font-family: Arial, sans-serif;
+  margin: 0;
+  padding: 0;
+}
+
+
+.story-being-read {
+  max-width: 600px;
+  background-color: #f9f9f9;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.story-being-read h2 {
+  font-size: 24px;
+  margin-bottom: 20px;
+  text-align: center;
+}
+
+.story-being-read ul {
+  list-style-type: none;
+  padding: 0;
+}
+
+.story-being-read li {
+  margin-bottom: 10px;
+  cursor: pointer;
+  padding: 10px;
+  border-radius: 6px;
+  transition: background-color 0.3s ease;
+}
+
+.story-being-read li:hover {
+  background-color: #13ABA2;
+}
+
+.story-being-read li span {
+  margin-right: 10px;
+}
+
+.custom-placeholder ::placeholder {
+  color: white !important;
+  opacity: 0;
+  /* Override any default opacity */
+}
+
+/* Đặt perspective trên phần tử chứa */
+.container {
+  perspective: 300px;
+}
+
+.book {
+  position: relative;
+  transform: rotateY(-3deg);
+  -moz-transform: rotateY(-3deg);
+  -webkit-transform: rotateY(-3deg);
+  outline: 1px solid transparent;
+  box-shadow: 5px 5px 20px #333;
+  margin: 0;
+}
+
+.book::before,
+.book::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  z-index: -1;
+  /* Đảm bảo các phần tử pseudo nằm phía sau */
+}
+
+.book::before {
+  width: 100%;
+  left: 7.5%;
+  background-color: #000;
+}
+
+.book::after {
+  width: 5%;
+  left: 100%;
+  background-color: #EFEFEF;
+  box-shadow: inset 0px 0px 5px #aaa;
+  transform: rotateY(20deg);
+  -moz-transform: rotateY(20deg);
+  -webkit-transform: rotateY(20deg);
+}
+
+/* Detail */
+.chapter-list {
+  height: 400px;
+  overflow-y: auto;
+}
+
+.chapter-list li:not(:last-child) {
+  border-bottom: 1px solid #ccc;
+}
+
+.chapter-list li:hover {
+  color: #13ABA2;
+}
+
+.story-info ul b {
+  color: #DDF2FD;
+}
+
+/* Story */
+.story-container {
+  background-color: #ffffff;
+  color: black;
+  font-size: 26px;
+  font-family: 'Palatino';
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.plugins {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.plugin-button {
+  margin: 5px;
+  background-color: #FFFF00;
+  color: black;
+  display: inline-block;
+  align-items: center;
+  text-align: center;
+}
+
+.settings-button {
+  background-color: #80CEB1;
+  color: white;
+}
+
+.navigation-buttons {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 20px;
+}
+
+.prev-button {
+  background-color: #D3EBCD;
+  color: #737373;
+}
+
+.next-button {
+  background-color: #80CEB1;
+  color: white;
+}
+
+.arrow {
+  font-size: 20px;
+}
+
+.loading {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.content {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+}
+
+.story-name {
+  font-size: 32px;
+  margin-bottom: 10px;
+}
+
+.chapter-name {
+  font-size: 24px;
+  margin-bottom: 20px;
+}
+
+.story-text {
+  text-align: justify;
+}
+
+.pre-wrapper {
+  width: fit-content;
+  padding: 5px;
+}
+
+.pre-wrapper pre {
+  overflow-x: auto;
+  white-space: pre-wrap;
+}

@@ -34,9 +34,110 @@
 }
 
 .table-link:hover {
-  color: #13ABA2;
+  background-color: #13ABA2 !important;
+  /* Thay đổi màu chữ khi hover */
+  border-radius: 3px;
+}
+
+.text-table-link:hover {
+  color: #13ABA2 !important;
   /* Thay đổi màu chữ khi hover */
 }
+
+body {
+  font-family: Arial, sans-serif;
+  margin: 0;
+  padding: 0;
+}
+
+
+.story-being-read {
+  max-width: 600px;
+  background-color: #f9f9f9;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.story-being-read h2 {
+  font-size: 24px;
+  margin-bottom: 20px;
+  text-align: center;
+}
+
+.story-being-read ul {
+  list-style-type: none;
+  padding: 0;
+}
+
+.story-being-read li {
+  margin-bottom: 10px;
+  cursor: pointer;
+  padding: 10px;
+  border-radius: 6px;
+  transition: background-color 0.3s ease;
+}
+
+.story-being-read li:hover {
+  background-color: #13ABA2;
+}
+
+.story-being-read li span {
+  margin-right: 10px;
+}
+
+.custom-placeholder ::placeholder {
+  color: white !important;
+  opacity: 0;
+  /* Override any default opacity */
+}
+
+/* Đặt perspective trên phần tử chứa */
+.container {
+  perspective: 300px;
+}
+
+.book {
+  position: relative;
+  transform: rotateY(-3deg);
+  -moz-transform: rotateY(-3deg);
+  -webkit-transform: rotateY(-3deg);
+  outline: 1px solid transparent;
+  box-shadow: 5px 5px 20px #333;
+  margin: 0;
+}
+
+.book::before,
+.book::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  z-index: -1;
+  /* Đảm bảo các phần tử pseudo nằm phía sau */
+}
+
+.book::before {
+  margin-top: 4px;
+  width: 100%;
+  left: 7.5%;
+  background-color: #000;
+  margin-bottom: 4px;
+}
+
+.book::after {
+  margin-top: 6px;
+  width: 5%;
+  left: 100%;
+  background-color: #EFEFEF;
+  box-shadow: inset 0px 0px 5px #aaa;
+  transform: rotateY(20deg);
+  -moz-transform: rotateY(20deg);
+  -webkit-transform: rotateY(20deg);
+  margin-bottom: 6px;
+}
+
+
 
 /* Detail */
 .chapter-list {
@@ -87,6 +188,7 @@
   display: inline-block;
   align-items: center;
   text-align: center;
+  font-family: 'Palatino';
 }
 
 .settings-button {
@@ -99,6 +201,7 @@
   justify-content: space-between;
   align-items: center;
   margin-top: 20px;
+  font-family: 'Palatino';
 }
 
 .prev-button {
@@ -150,4 +253,42 @@
 .pre-wrapper pre {
   overflow-x: auto;
   white-space: pre-wrap;
+}
+
+.detail-list-container {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  /* Adjust number of columns based on your needs */
+  gap: 5px;
+  column-gap: 50px;
+  margin-top: 20px;
+  justify-items: start;
+}
+
+.detail-list-label {
+  font-weight: bold;
+  text-align: left;
+}
+
+.detail-list-value {
+  text-align: left;
+}
+
+.custom-button {
+  border: 2px solid #333;
+  /* border color */
+  background-color: #13ABA2 !important;
+  /* background color */
+  border-radius: 30px !important;
+  cursor: pointer;
+  display: flex;
+  margin-top: 20px;
+  width: 150px;
+  height: 50px;
+  align-items: center;
+}
+
+.custom-button:hover {
+  background-color: #37819c !important;
+  /* change background color on hover */
 }

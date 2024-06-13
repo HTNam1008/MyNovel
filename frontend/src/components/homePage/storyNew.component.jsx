@@ -1,7 +1,6 @@
 import {
   TableContainer,
   Table,
-  TableCaption,
   Thead,
   Tr,
   Th,
@@ -10,10 +9,13 @@ import {
   Skeleton,
 } from "@chakra-ui/react";
 
+import { vietnameseToSlug } from "../../utils/function.js";
+
 import useSearchFetching from "../../services/search.service.js";
+
 import { useState, useEffect } from "react";
 
-import styles from "../../assets/styles/style.css";
+import { useNavigate } from "react-router-dom";
 
 import { useTheme } from "../../assets/context/theme.context.js";
 
@@ -22,7 +24,7 @@ import { useServer } from "../../assets/context/server.context.js";
 
 function StoryNew() {
   // ----- Get Server Default -----
-  const {selectedServer}=useServer();
+  const { selectedServer } = useServer();
   console.log('Selected Server - new:', selectedServer)
   // ----- Get Server Default End -----
 
@@ -37,18 +39,24 @@ function StoryNew() {
     }
   }, [data, loading]);
 
+  const navigate = useNavigate();
+
+  const handleClick = (id, title) => {
+    console.log("Item Click:", id);
+    navigate(`/detail/${id}/${title}`);
+  };
   // ----- Story new End -----
   // ----- Theme -----
   const { theme } = useTheme();
   // ----- Theme End -----
 
   return (
-    <div>
+    <div style={{ marginBottom: '50px' }}>
       <h2
         style={{
           color: theme === "dark" ? "#fff" : "#000",
           padding: "16px",
-          fontFamily: "Monterrat, sans-serif",
+          fontFamily: "Montserrat, sans-serif",
           fontSize: "2em", // Tùy chỉnh kích thước font
           fontWeight: "bold", // Đậm hơn
           textDecoration: "underline",
@@ -62,12 +70,13 @@ function StoryNew() {
       >
         Truyện mới đăng
       </h2>
-      <TableContainer style={{ color: "#DDF2FD" }}>
+      <TableContainer style={{ color: "#DDF2FD", borderRadius: "10px" }}>
         <Table
           variant="simple"
           border="1px"
           borderColor="#E2E8F0"
           borderRadius="md"
+
         >
           <Thead bg="#13ABA2">
             <Tr>
@@ -79,40 +88,51 @@ function StoryNew() {
               </Th>
             </Tr>
           </Thead>
-          <Tbody style={{color: theme === "dark" ? "#fff" : "#000"}}  >
+          <Tbody style={{ color: theme === "dark" ? "#000" : "#fff", backgroundColor: theme === "dark" ? "#DDF2FD" : "#1D3557" }}  >
             {loading
               ? Array.from({ length: 5 }).map((_, index) => (
-                  <Tr key={index}>
-                    <Td>
-                      <Skeleton height="20px" />
-                    </Td>
-                    <Td>
-                      <Skeleton height="20px" />
-                    </Td>
-                    <Td>
-                      <Skeleton height="20px" />
-                    </Td>
-                    <Td>
-                      <Skeleton height="20px" />
-                    </Td>
-                  </Tr>
-                ))
+                <Tr key={index}>
+                  <Td>
+                    <Skeleton height="20px" />
+                  </Td>
+                  <Td>
+                    <Skeleton height="20px" />
+                  </Td>
+                  <Td>
+                    <Skeleton height="20px" />
+                  </Td>
+                  <Td>
+                    <Skeleton height="20px" />
+                  </Td>
+                </Tr>
+              ))
               : storyNewData.map((item, index) => (
-                  <Tr key={index}>
-                    <Td>
-                      <a
-                        href="#"
-                        className={styles["table-link"]}
-                        style={{ textDecoration: "none" }}
-                      >
-                        {item.title}
-                      </a>
-                    </Td>
-                    <Td>{item.categories}</Td>
-                    <Td>{item.total_chapters}</Td>
-                    <Td>{item.time}</Td>
-                  </Tr>
-                ))}
+
+                <Tr key={index} className="text-table-link">
+
+                  <Td onClick={() => handleClick(item.id)} style={{
+                    maxWidth: "300px",
+                    whiteSpace: "nowrap",
+                    overflow: "hidden",
+                    textOverflow: "ellipsis",
+                  }}>
+                    <a
+                      href="#"
+                      style={{ textDecoration: "none", fontWeight: "500" }}
+                    >
+                      {item.title}
+                    </a>
+                  </Td>
+                  <Td style={{
+                    maxWidth: "300px",
+                    whiteSpace: "nowrap",
+                    overflow: "hidden",
+                    textOverflow: "ellipsis",
+                  }}>{item.categories}</Td>
+                  <Td>{item.total_chapters}</Td>
+                  <Td>{item.time}</Td>
+                </Tr>
+              ))}
           </Tbody>
         </Table>
       </TableContainer>

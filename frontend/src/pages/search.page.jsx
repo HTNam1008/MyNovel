@@ -4,12 +4,11 @@ import Search from '../components/searchPage/search.component';
 
 function SearchPage() {
 
-  const {title} = useParams();
+  const { title } = useParams();
   console.log('Search query 2:', title);
   return (
     <>
-      <h1>search.page</h1>
-      <Search title={title}/>
+      <Search title={title} />
     </>
   )
 }

@@ -21,6 +21,7 @@ import { useServer } from "../../assets/context/server.context.js";
 
 import "../../assets/styles/style.css";
 
+import { vietnameseToSlug } from "../../utils/function.js";
 
 
 
@@ -45,9 +46,9 @@ function StoryUpdate() {
 
     const navigate = useNavigate();
 
-    const handleClick = (id) => {
+    const handleClick = (id,title) => {
       console.log("Item Click:", id);
-      navigate(`/detail/${id}`);
+      navigate(`/detail/${id}/${title}`);
     };
   // ----- Story Update End -----
 
@@ -84,7 +85,7 @@ function StoryUpdate() {
           ? Array.from({ length: 12 }).map((_, index) => (
               <Card
                 key={index}
-                bg={theme === "dark" ? "#fff" : "#1D3557"} 
+                bg={theme === "dark" ? "#DDF2FD" : "#1D3557"} 
                 color={theme === "dark" ? "#000" : "#fff"}
                 style={{
                   display: "flex",
@@ -106,7 +107,7 @@ function StoryUpdate() {
               <Card
                 className="card"
                 key={index}
-                bg={theme === "dark" ? "#fff" : "#1D3557"} 
+                bg={theme === "dark" ? "#DDF2FD" : "#1D3557"} 
                 color={theme === "dark" ? "#000" : "#fff"}
 
                 style={{
@@ -116,7 +117,7 @@ function StoryUpdate() {
                   textAlign: "center",
                   position: "relative",
                 }}
-                onClick={() => handleClick(item.id)}
+                onClick={() => handleClick(item.id, item.titleUrl ? item.titleUrl : item.title)}
               >
                 <CardHeader style={{ paddingBottom: "0px" }}>
                   {item.is_full ? (
