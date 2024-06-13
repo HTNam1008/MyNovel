@@ -58,6 +58,57 @@ const getStoryContent = async (req, res) => {
     res.status(500).json(data);
   }
 };
+const _getStoryContent = async (title, numberChapter) => {
+  try {
+    let _numberChapter = 'chuong-'+numberChapter;
+    const url = `${BASE_URL}/doc-truyen/${title}/${_numberChapter}`;
+    console.log('URL:', url);
+    const html = await fetchHTML(url);
+
+    const $ = cheerio.load(html);
+
+    let header = $('.chapter.col-xs-12:first');
+    let content = $('.chapter-c-content').find('.box-chap:first').html();
+    let storyTitle = header.find('.truyen-title').text();
+    let chapterTitle = header.find('h2').text();
+
+    // Tạo đối tượng JSON
+    const responseData = {
+      story_name: storyTitle,
+      chapter_name: chapterTitle,
+      content: content
+    };
+
+    return responseData;
+  } catch (error) {
+    console.error(error);
+    return {
+      content: "Error fetching data"
+    };
+  }
+};
+
+
+
+const getStoryDownload = async (req, res) => {
+  try {
+    const _title = req.params.title;
+    const totalChapters = await getNumChapter(req, res);
+
+    let allChapters = [];
+    for (let i = 1; i <= totalChapters; i++) {
+      const chapterData = await _getStoryContent(_title, i);
+      allChapters.push(chapterData);
+    }
+    const storyData = {
+      data: allChapters
+    }
+    return storyData
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: "Error fetching or exporting story data" });
+  }
+};
 
 const searchStory = async (req, res) => {
   try {
@@ -290,6 +341,23 @@ const getStoryDetail = async (req, res) => {
     res.status(500).json({ error: "Error fetching data" });
   }
 };
+const getNumChapter = async (req, res) => {
+  try {
+    const storyName = req.params.title; 
+    const url = `${BASE_URL}/doc-truyen/${storyName}`;
+    const html = await fetchHTML(url);
+    const $ = cheerio.load(html);
+
+    const regex = /\d+/g;
+
+    let totalChapters = $('#j-bookCatalogPage').text().match(regex)[0];
+
+    return totalChapters
+  } catch (error) {
+    console.error(error);
+  }
+}
+
 
 const getStoryChapters = async (req, res) => {
   try {
@@ -325,4 +393,5 @@ module.exports = {
   getStoryFinish,
   getStoryDetail,
   getStoryChapters,
+  getStoryDownload,
 };

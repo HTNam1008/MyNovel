@@ -111,7 +111,7 @@ function Header() {
 
   useEffect(() => {
     // Tạo một instance của WebSocketService
-    const webSocketService = new WebSocketService("/api/plugins");
+    const webSocketService = new WebSocketService("/api/plugins/server");
 
     // Xử lý sự kiện khi dữ liệu được cập nhật
     const handleDataUpdate = (data) => {

@@ -9,7 +9,7 @@ function StoryPage() {
   const {theme} = useTheme();
 
   return (
-    <div style={{ backgroundColor: theme === "dark" ? "#1D3557" : "#DDF2FD" }}>
+    <div style={{ backgroundColor: theme === "dark" ? "#1D3557" : "#E3F4F4" }}>
       <Container className="d-flex justify-content-center" style={{ flexDirection: "column" }}>
         <Story chapterId={chapterId} title={title} numChapter={numChapter}  />  
       </Container>

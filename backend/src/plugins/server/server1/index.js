@@ -86,6 +86,7 @@ const getStoryDetail = async (req, res) => {
     });
     // console.log(response.data);
     res.json(response.data); // Trả về dữ liệu cho client
+    // return response.data;
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: "Error fetching data" });
@@ -112,6 +113,37 @@ const getStoryChapters = async (req, res) => {
   }
 };
 
+const getStoryDownload = async (req, res) => {
+  try {
+    const id = req.params.id;
+    // console.log('Search query 4:', id);
+    const response = await axios.get(`${API_URL}/v1/story/detail/${id}/download`, {
+      headers: {
+        "User-Agent": USER_AGENT,
+      },
+    });
+    // console.log(response.data);
+    // res.json(response.data); // Trả về dữ liệu cho client
+    return response.data;
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: "Error fetching data" });
+  }
+};
+// const fetchStoryDetail = async (id) => {
+//   try {
+//     const response = await axios.get(`${API_URL}/v1/story/detail/${id}`, {
+//       headers: {
+//         "User-Agent": USER_AGENT,
+//       },
+//     });
+//     return response.data;
+//   } catch (error) {
+//     console.error('Error fetching story detail:', error);
+//     throw error;
+//   }
+// };
+
 module.exports = {
   name: "server1",
     getStoryContent,
@@ -120,4 +152,6 @@ module.exports = {
     getStoryNew,
     getStoryDetail,
     getStoryChapters,
+    getStoryDownload,
+    // fetchStoryDetail,
 };

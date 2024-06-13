@@ -10,6 +10,8 @@ import {
   Skeleton,
 } from "@chakra-ui/react";
 
+import { vietnameseToSlug } from "../../utils/function.js";
+
 import useSearchFetching from "../../services/search.service.js";
 
 import { useState, useEffect } from "react";
@@ -42,9 +44,9 @@ function StoryNew() {
 
   const navigate = useNavigate();
 
-  const handleClick = (id) => {
+  const handleClick = (id,title) => {
     console.log("Item Click:", id);
-    navigate(`/detail/${id}`);
+    navigate(`/detail/${id}/${vietnameseToSlug(title)}`);
   };
   // ----- Story new End -----
   // ----- Theme -----

@@ -1,4 +1,4 @@
-const app = require("./src/app");
+const app = require('./src/app');
 const { loadPlugins } = require('./src/pluginLoader');
 
 const PORT = process.env.PORT || 3001;
@@ -6,14 +6,9 @@ const PORT = process.env.PORT || 3001;
 const server = app.listen(PORT, () => {
     console.log(`MyNovel started on port ${PORT}`);
     loadPlugins(app); // Gọi loadPlugins sau khi server đã start
+    // app.use('/api', exportRoutes); // Use export routes
 });
 
-// process.on('SIGINT', () => {
-//     console.log('Received SIGINT. Closing MyNovel...');
-//     server.close(() => {
-//         console.log('MyNovel has been closed');
-//     });
-// });
 let isClosing = false;
 
 process.on('SIGINT', () => {
