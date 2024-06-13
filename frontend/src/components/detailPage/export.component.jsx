@@ -45,9 +45,17 @@ const ExportButton = ({ data, title }) => {
     };
 
     return (
-        <div>
-            <Dropdown onSelect={(eventKey) => setSelectedPlugin(exportPlugins.find(p => p.name === eventKey))}>
-                <Dropdown.Toggle variant="success" id="dropdown-basic">
+        <div style={{display:"flex", height:"50px", borderColor:"#0d6efd"}}>
+            <Dropdown  
+                      onSelect={(eventKey) => setSelectedPlugin(exportPlugins.find(p => p.name === eventKey))}>
+                <Dropdown.Toggle variant="success" id="dropdown-basic" 
+                                 style={{borderTopLeftRadius: '30px', 
+                                        borderBottomLeftRadius: '30px', 
+                                        borderTopRightRadius: '0', 
+                                        borderBottomRightRadius: '0',
+                                        backgroundColor:"#13ABA2",
+                                        height:"50px",
+                                        borderColor:"#0d6efd"}}>
                     {selectedPlugin ? `Export as ${selectedPlugin.name}` : 'Choose export format'}
                 </Dropdown.Toggle>
 
@@ -60,9 +68,10 @@ const ExportButton = ({ data, title }) => {
                 </Dropdown.Menu>
             </Dropdown>
             <Button
+                style={{borderTopLeftRadius: '0', borderBottomLeftRadius: '0', borderTopRightRadius: '30px', borderBottomRightRadius: '30px', borderColor:"#0d6efd",backgroundColor:"#13ABA2" }}
                 onClick={() => handleExport(selectedPlugin)}
                 disabled={!selectedPlugin}
-                style={{ marginLeft: '10px' }}
+            
             >
                 Export
             </Button>
