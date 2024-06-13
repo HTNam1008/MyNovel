@@ -71,12 +71,13 @@ function StoryNew() {
       >
         Truyện mới đăng
       </h2>
-      <TableContainer style={{ color: "#DDF2FD" }}>
+      <TableContainer style={{ color: "#DDF2FD", borderRadius:"10px"}}>
         <Table
           variant="simple"
           border="1px"
           borderColor="#E2E8F0"
           borderRadius="md"
+          
         >
           <Thead bg="#13ABA2">
             <Tr>
@@ -88,7 +89,7 @@ function StoryNew() {
               </Th>
             </Tr>
           </Thead>
-          <Tbody style={{color: theme === "dark" ? "#fff" : "#000"}}  >
+          <Tbody style={{color: theme === "dark" ? "#000" : "#fff", backgroundColor: theme === "dark" ? "#DDF2FD" : "#1D3557"}}  >
             {loading
               ? Array.from({ length: 5 }).map((_, index) => (
                   <Tr key={index}>
@@ -109,15 +110,25 @@ function StoryNew() {
               : storyNewData.map((item, index) => (
 
                   <Tr key={index} className="text-table-link">
-                    <Td onClick={() => handleClick(item.id)}>
+                    <Td onClick={() => handleClick(item.id)} style={{
+                        maxWidth: "300px",
+                        whiteSpace: "nowrap",
+                        overflow: "hidden",
+                        textOverflow: "ellipsis",
+                      }}>
                       <a
                         href="#"
-                        style={{ textDecoration: "none" }}
+                        style={{ textDecoration: "none",fontWeight:"500" }}
                       >
                         {item.title}
                       </a>
                     </Td>
-                    <Td>{item.categories}</Td>
+                    <Td style={{
+                        maxWidth: "300px",
+                        whiteSpace: "nowrap",
+                        overflow: "hidden",
+                        textOverflow: "ellipsis",
+                      }}>{item.categories}</Td>
                     <Td>{item.total_chapters}</Td>
                     <Td>{item.time}</Td>
                   </Tr>

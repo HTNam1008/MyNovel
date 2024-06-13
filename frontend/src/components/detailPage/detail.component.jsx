@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { Button, Container } from "react-bootstrap";
 import useDetailFetching from "../../services/detail.service.js";
 import useChapterFetching from "../../services/chapter.service.js";
@@ -7,51 +7,46 @@ import { useServer } from "../../assets/context/server.context.js";
 import { useTheme } from "../../assets/context/theme.context.js";
 import "../../assets/styles/style.css";
 import { vietnameseToSlug, getSubstringBeforeColon } from "../../utils/function.js";
+import StoryDescription from "./description.component.jsx";
 
-
-function Detail({ id , title }) {
+function Detail({ id, title }) {
   let _title = title;
-  // ----- Get Server Default -----
   const { selectedServer } = useServer();
-  console.log("Selected Server - detail:", selectedServer);
-  // ----- Get Server Default End -----
-
   const { dataDetail } = useDetailFetching(`/${selectedServer}/detail/${id}/${title}`);
-  const { dataChapters } = useChapterFetching(
-    `/${selectedServer}/chapters/${id}/${title}`
-  );
-
+  const { dataChapters } = useChapterFetching(`/${selectedServer}/chapters/${id}/${title}`);
+  const { theme } = useTheme();
   const navigate = useNavigate();
 
+  const [descriptionHeight, setDescriptionHeight] = useState(0);
+  const descriptionRef = useRef(null);
+
+  const handleDescriptionResize = () => {
+    if (descriptionRef.current) {
+      setDescriptionHeight(descriptionRef.current.scrollHeight);
+    }
+  };
+
+  useEffect(() => {
+    handleDescriptionResize();
+  }, [dataDetail]);
+
   const handleRead = (chapterId, _title, numChapter) => {
-    // Thực hiện hành động tìm kiếm với searchQuery
-    console.log("Item Click detail:", chapterId, _title, numChapter);
-    // Ví dụ: redirect hoặc thực hiện tìm kiếm trong trang hiện tại
     navigate(`/story/${chapterId}/${_title}/${numChapter}`);
   };
-  // ----- Theme -----
-  const { theme } = useTheme();
-  // ----- Theme End -----
-
-  // ----- Read first chapter -----
 
   const readFirstChap = (chapterId, _title) => {
-    // Đọc chương đầu tiên
     navigate(`/story/${chapterId}/${_title}/chuong-1`);
   };
-  // ----- Read first chapter end -----
 
-  const imageUrl =
-    dataDetail?.image == null
-      ? "https://www.huber-online.com/daisy_website_files/_processed_/8/0/csm_no-image_d5c4ab1322.jpg"
-      : dataDetail.image;
+  const imageUrl = dataDetail?.image
+    ? dataDetail.image
+    : "https://www.huber-online.com/daisy_website_files/_processed_/8/0/csm_no-image_d5c4ab1322.jpg";
 
   return (
     <div
       style={{
         width: "100%",
         height: "100%",
-        // background: `url(${dataDetail.image}) no-repeat center/cover, linear-gradient(to top, rgba(0, 0, 0, 0.8), rgba(0, 0, 0, 0.5))`,
         backgroundSize: "cover",
         backgroundPosition: "center",
       }}
@@ -75,14 +70,14 @@ function Detail({ id , title }) {
               color: theme === "dark" ? "#000" : "#fff",
               padding: "16px",
               fontFamily: "Monterrat, sans-serif",
-              fontSize: "2em", // Tùy chỉnh kích thước font
-              fontWeight: "bold", // Đậm hơn
+              fontSize: "2em",
+              fontWeight: "bold",
               textDecoration: "underline",
               textUnderlineOffset: "8px",
-              transition: "transform 0.3s, color 0.3s", // Thêm hiệu ứng chuyển động khi hover
+              transition: "transform 0.3s, color 0.3s",
               ":hover": {
-                transform: "scale(1.05)", // Phóng to khi hover
-                color: "#FFD700", // Thay đổi màu khi hover
+                transform: "scale(1.05)",
+                color: "#FFD700",
               },
             }}
           >
@@ -90,85 +85,87 @@ function Detail({ id , title }) {
           </h2>
           <div
             className="story-info container"
-            style={{ padding: "0px 30px 30px 30px", display: "flex", alignItems: "center"}}
+            style={{ padding: "30px 30px 30px 30px", display: "flex", alignItems: "center" }}
           >
-            <div className="book" style={{ marginRight: "50px" }}>
+            <div className="book" style={{ marginRight: "70px" }}>
               <img
                 src={imageUrl}
                 alt={dataDetail?.title}
-                style={{ height: "auto", width: "250px", borderRadius: "5px" }}
+                style={{ height: "auto", width: "250px", borderRadius: "0px", border: "1px solid #000", borderLeft: "5px solid #000" }}
               />
             </div>
-            <div style={{ flex: 1, padding: "100px" , color: theme === "dark" ? "#000" : "#fff" }}>
-              <h2 className="story-title" style={{ padding: "20px 30px" }}>
+            <div style={{ flex: 1, color: theme === "dark" ? "#000" : "#fff" }}>
+              <h2 className="story-title" style={{ borderBottom: "1px solid #13ABA2", paddingBottom: "20px", fontFamily: "'Black Ops One', sans-serif", fontSize: "2rem" }}>
                 {dataDetail?.title}
               </h2>
-              <ul >
-                <li >
-                  Tác giả: <b style={{color: theme === "dark" ? "#000" : "#fff" }}>{dataDetail?.author}</b>
-                </li>
-                <li >
-                  Thể loại: <b style={{color: theme === "dark" ? "#000" : "#fff" }}>{dataDetail?.categories}</b>
-                </li>
-                <li >
-                  Tình trạng: <b style={{color: theme === "dark" ? "#000" : "#fff" }}>{dataDetail?.status}</b>
-                </li>
-                <li >
-                  Cập nhật: <b style={{color: theme === "dark" ? "#000" : "#fff" }}>{dataDetail?.time}</b>
-                </li>
-                <Button
-                  onClick={() =>
-                    readFirstChap(
-                      dataChapters[0].id,
-                      _title
-                    )
-                  }
-                  style={{ cursor: "pointer", marginTop: "20px" }}
+              <ul style={{ paddingLeft: "0rem" }}>
+                <div className="detail-list-container" style={{ borderBottom: "1px solid #13ABA2", paddingBottom: "20px" }}>
+                  <span className={`detail-list-label `} style={{ color: theme === "dark" ? "#1D3557" : "#DDF2FD" }}>Tác giả</span>
+                  <span className={`detail-list-label `} style={{ color: theme === "dark" ? "#1D3557" : "#DDF2FD" }}>Thể loại</span>
+                  <span className={`detail-list-label `} style={{ color: theme === "dark" ? "#1D3557" : "#DDF2FD" }}>Tình trạng</span>
+                  <span className={`detail-list-label `} style={{ color: theme === "dark" ? "#1D3557" : "#DDF2FD" }}>Cập nhật</span>
+
+                  <span className={`detail-list-value `} style={{ color: theme === "dark" ? "#000" : "#fff" }}>{dataDetail?.author}</span>
+                  <span className={`detail-list-value`} style={{ color: theme === "dark" ? "#000" : "#fff" }}>{dataDetail?.categories}</span>
+                  <span className={`detail-list-value `} style={{ color: theme === "dark" ? "#000" : "#fff" }}>{dataDetail?.status}</span>
+                  <span className={`detail-list-value`} style={{ color: theme === "dark" ? "#000" : "#fff" }}>{dataDetail?.time}</span>
+                </div>
+                <Button className="custom-button"
+                  onClick={() => readFirstChap(dataChapters[0].id, _title)}
                 >
-                  Đọc từ đầu
+                  <span style={{ display: 'inline-flex', alignItems: "center", fontWeight: "500", fontSize: "1rem" }}>
+                    <img src={`${process.env.PUBLIC_URL}/images/read_book.png`} style={{ marginRight: "8px", width: "20px", height: "20px" }} />
+                    Đọc truyện
+                  </span>
                 </Button>
               </ul>
             </div>
           </div>
-          <h4 style={{ color: theme === "dark" ? "#000" : "#DDF2FD", margin: "20px 0" }}>Giới thiệu</h4>
-          <div
-            className="story-description"
-            dangerouslySetInnerHTML={{ __html: dataDetail?.description }}
-          />
-          <h4 style={{ color: theme === "dark" ? "#000" : "#DDF2FD", margin: "40px 0 20px" }}>
-            Danh sách chương
-          </h4>
-          <ul
-            className="chapter-list"
-            style={{
-              margin: "20px",
-              padding: "5px 10px",
-              listStyleType: "none",
-              backgroundColor: "rgba(255, 255, 255, 0.1)",
-            }}
-          >
-            {dataChapters?.map((chapter, index) => (
-              <li
-                key={index}
-                onClick={() =>
-                  handleRead(
-                    chapter.id,
-                    _title,
-                    vietnameseToSlug(getSubstringBeforeColon(chapter.title))
-                  )
-                }
+          <div style={{ display: "flex", padding:" 20px 0px"}}>
+            <div style={{ flex: "1" }}>
+              <h4 style={{ color: theme === "dark" ? "#000" : "#DDF2FD", paddingLeft:"40px" }}>
+                Giới thiệu
+              </h4>
+              <div ref={descriptionRef}>
+                <StoryDescription description={dataDetail?.description} maxLength={500} onToggle={handleDescriptionResize} />
+              </div>
+            </div>
+
+            <div style={{ flex: "0.5" }}>
+              <h4 style={{ color: theme === "dark" ? "#000" : "#DDF2FD" }}>
+                Danh sách chương
+              </h4>
+              <ul
+                className="chapter-list"
                 style={{
-                  fontWeight: "550",
-                  cursor: "pointer",
-                  margin: "3px",
-                  borderBottom:
-                    index < dataChapters.length - 1 ? "1px solid #ccc" : "none",
+                  listStyleType: "none",
+                  backgroundColor: theme === "dark" ? "#DDF2FD" : "#1D3557",
+                  borderRadius: "5px",
+                  border: '1px solid #13ABA2',
+                  height: `${descriptionHeight}px`,
                 }}
               >
-                {chapter.title}
-              </li>
-            ))}
-          </ul>
+                {dataChapters?.map((chapter, index) => (
+                  <li
+                    key={index}
+                    onClick={() => handleRead(
+                      chapter.id,
+                      _title,
+                      vietnameseToSlug(getSubstringBeforeColon(chapter.title))
+                    )}
+                    style={{
+                      fontWeight: "500",
+                      cursor: "pointer",
+                      margin: "3px",
+                      borderBottom: index < dataChapters.length - 1 ? "1px solid #ccc" : "none",
+                    }}
+                  >
+                    {chapter.title}
+                  </li>
+                ))}
+              </ul>
+            </div>
+          </div>
         </div>
       </Container>
     </div>

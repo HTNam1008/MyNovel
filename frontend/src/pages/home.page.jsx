@@ -21,11 +21,11 @@ function HomePage() {
             <Row>
               <StoryUpdate />
             </Row>
-            <Row >
-              <Col>
+            <Row style={{display:"flex"}}>
+              <Col style={{flex:"2"}}>
                 <StoryNew />
               </Col>
-              <Col>
+              <Col style={{flex:"1"}}>
                 <StoryBeingRead />
               </Col>
             </Row>

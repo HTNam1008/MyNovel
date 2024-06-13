@@ -13,6 +13,7 @@ import useStoryFetching from "../../services/story.service.js";
 import WebSocketService from "../../services/webSocket.service.js";
 import { useServer } from "../../assets/context/server.context.js";
 import Settings from "../../utils/setting.js";
+import { useTheme } from "../../assets/context/theme.context.js";
 
 function Story({ chapterId, title, numChapter }) {
   const { selectedServer } = useServer();
