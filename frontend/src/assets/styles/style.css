@@ -106,12 +106,15 @@
 }
 
 .book::before {
+  margin-top: 4px;
   width: 100%;
   left: 7.5%;
   background-color: #000;
+  margin-bottom: 4px;
 }
 
 .book::after {
+  margin-top: 6px;
   width: 5%;
   left: 100%;
   background-color: #EFEFEF;
@@ -119,6 +122,7 @@
   transform: rotateY(20deg);
   -moz-transform: rotateY(20deg);
   -webkit-transform: rotateY(20deg);
+  margin-bottom: 6px;
 }
 
 
@@ -234,4 +238,38 @@
 .pre-wrapper pre {
   overflow-x: auto;
   white-space: pre-wrap;
+}
+
+.detail-list-container {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr); /* Adjust number of columns based on your needs */
+  gap: 5px;
+  column-gap: 50px;
+  margin-top: 20px;
+  justify-items: start;
+}
+
+.detail-list-label {
+  font-weight: bold;
+  text-align: left;
+}
+
+.detail-list-value {
+  text-align: left;
+}
+
+.custom-button {
+  border: 2px solid #333; /* border color */
+  background-color: #13ABA2 !important; /* background color */
+  border-radius: 30px !important;
+  cursor: pointer;
+  display:flex;
+  margin-top: 20px;
+  width:150px;
+  height: 50px;
+  align-items: center;
+}
+
+.custom-button:hover {
+  background-color: #37819c !important; /* change background color on hover */
 }

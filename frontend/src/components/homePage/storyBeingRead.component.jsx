@@ -65,6 +65,7 @@ const StoryBeingRead = () => {
                 )
               }
               className="story-item"
+              style={{fontWeight:"500"}}
             >
               <span>{story.title}</span>
               <span>&gt;</span>
