@@ -1,11 +1,7 @@
 const PDFDocument = require('pdfkit');
-const axios = require('axios');
-
-const API_URL = process.env.API_URL || "https://api.truyenfull.vn";
-const USER_AGENT = process.env.USER_AGENT || "Edg/124.0.0.0";
 
 const pdfExport = {
-    name: 'PDF Export',
+    name: 'pdf',
     exportStory: async (storyData,req, res) => {
         try {
             

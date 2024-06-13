@@ -43,10 +43,7 @@ function Detail({ id, title }) {
             ? 'https://www.huber-online.com/daisy_website_files/_processed_/8/0/csm_no-image_d5c4ab1322.jpg'
             : dataDetail.image;
 
-    const data = {
-        title: dataDetail?.title,
-        chapters: dataChapters,
-    };
+
 
     return (
         <div

@@ -1,7 +1,6 @@
 import {
   TableContainer,
   Table,
-  TableCaption,
   Thead,
   Tr,
   Th,
@@ -15,8 +14,6 @@ import { vietnameseToSlug } from "../../utils/function.js";
 import useSearchFetching from "../../services/search.service.js";
 
 import { useState, useEffect } from "react";
-
-import styles from "../../assets/styles/style.css";
 
 import { useNavigate } from "react-router-dom";
 
@@ -46,7 +43,7 @@ function StoryNew() {
 
   const handleClick = (id,title) => {
     console.log("Item Click:", id);
-    navigate(`/detail/${id}/${vietnameseToSlug(title)}`);
+    navigate(`/detail/${id}/${title}`);
   };
   // ----- Story new End -----
   // ----- Theme -----
@@ -111,7 +108,7 @@ function StoryNew() {
               : storyNewData.map((item, index) => (
 
                   <Tr key={index} className="text-table-link">
-                    <Td onClick={() => handleClick(item.id,item.title)}>
+                    <Td onClick={() => handleClick(item.id,item.titleUrl ? item.titleUrl : vietnameseToSlug(item.title))}>
                       <a
                         href="#"
                         style={{ textDecoration: "none" }}

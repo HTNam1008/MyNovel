@@ -190,7 +190,7 @@ const getStoryUpdate = async (req, res) => {
     const $ = cheerio.load(html);
     const bookResults = [];
 
-    let title, authorName, bookUrl, imageUrl, intro, genre, is_full, chapters, time;
+    let title, authorName, bookUrl, imageUrl, intro, genre, is_full, chapters, time,titleUrl;
     $('.main-content-wrap .rank-view-list li').each((index, element) => {
       title = $(element).find('.book-mid-info h4').text().trim();
       authorName = $(element).find('.book-mid-info .author .name').text().trim();
@@ -199,11 +199,14 @@ const getStoryUpdate = async (req, res) => {
       chapters = $(element).find('.book-mid-info .author .KIBoOgno').text().trim();
       time = $(element).find('.book-mid-info .update span').text().trim();
       bookUrl = $(element).find('.book-mid-info h4 a').attr('href');
+      titleUrl = bookUrl.substring(bookUrl.lastIndexOf("/") + 1);
+
       imageUrl = $(element).find('.book-img-box img.lazy').attr('src');
       intro = $(element).find('.book-mid-info .intro').text().trim();
 
       bookResults.push({
           title: title,
+          titleUrl: titleUrl,
           image: imageUrl,
           author: authorName,
           is_full: is_full,
@@ -228,7 +231,7 @@ const getStoryNew = async (req, res) => {
     const $ = cheerio.load(html);
     const bookResults = [];
 
-    let title, authorName, bookUrl,is_full, imageUrl, intro, genre, status, chapters, time;
+    let title, authorName, bookUrl,is_full, imageUrl, intro, genre, status, chapters, time,titleUrl;
 
     $('.main-content-wrap .rank-view-list li').each((index, element) => {
       title = $(element).find('.book-mid-info h4').text().trim();
@@ -239,12 +242,15 @@ const getStoryNew = async (req, res) => {
       chapters = $(element).find('.book-mid-info .author .KIBoOgno').text().trim();
       time = $(element).find('.book-mid-info .update span').text().trim();
       bookUrl = $(element).find('.book-mid-info h4 a').attr('href');
+      titleUrl = bookUrl.substring(bookUrl.lastIndexOf("/") + 1);
+
       imageUrl = $(element).find('.book-img-box img.lazy').attr('src');
       intro = $(element).find('.book-mid-info .intro').text().trim();
 
       bookResults.push({
        
           title: title,
+          titleUrl: titleUrl,
           image: imageUrl,
           author: authorName,
           is_full: is_full,
@@ -270,7 +276,7 @@ const getStoryFinish = async (req, res) => {
     const $ = cheerio.load(html);
     const bookResults = [];
 
-    let title, authorName, bookUrl, imageUrl, intro, genre, status, chapters, time;
+    let title, authorName, bookUrl, imageUrl, intro, genre, status, chapters, time,titleUrl;
     $('.main-content-wrap .rank-view-list li').each((index, element) => {
       title = $(element).find('.book-mid-info h4').text().trim();
       authorName = $(element).find('.book-mid-info .author .name').text().trim();
@@ -281,10 +287,13 @@ const getStoryFinish = async (req, res) => {
       bookUrl = $(element).find('.book-mid-info h4 a').attr('href');
       imageUrl = $(element).find('.book-img-box img.lazy').attr('src');
       intro = $(element).find('.book-mid-info .intro').text().trim();
+      titleUrl = bookUrl.substring(bookUrl.lastIndexOf("/") + 1);
+      
 
       bookResults.push({
         book: {
           title: title,
+          titleUrl: titleUrl,
           image: imageUrl,
           author: authorName,
           is_full: is_full,
@@ -318,7 +327,7 @@ const getStoryDetail = async (req, res) => {
     let authorName = bookInfo.find('.tag a:first').text();
     let status = bookInfo.find('.tag span').text();
     let genre = bookInfo.find('.tag a:last').text();
-    let chapters = $('#j-bookCatalogPage').text().match(regex)[0];
+    let chapters = await getNumChapter(req, res);
     let intro = $('.book-info-detail .book-intro p').text();
     let timeStr = $('.catalog-content-wrap .volume h3 .count').text();
     let time = timeStr.substring(timeStr.indexOf(" ") + 1);
@@ -350,13 +359,25 @@ const getNumChapter = async (req, res) => {
 
     const regex = /\d+/g;
 
-    let totalChapters = $('#j-bookCatalogPage').text().match(regex)[0];
+    // Tìm tất cả các liên kết chương trong nội dung
+    const chapters = $('.catalog-content-wrap .volume a').map((i, element) => {
+      const text = $(element).text();
+      const match = text.match(regex);
+      return match ? match[0] : null;
+    }).get();
+
+    // Lọc ra các giá trị null và chuyển đổi sang số nguyên
+    const chapterNumbers = chapters.filter(num => num !== null).map(num => parseInt(num, 10));
+
+    // Tìm số chương lớn nhất
+    const totalChapters = Math.max(...chapterNumbers);
+    console.log("totalChapters: ",totalChapters);
 
     return totalChapters
   } catch (error) {
     console.error(error);
   }
-}
+};
 
 
 const getStoryChapters = async (req, res) => {

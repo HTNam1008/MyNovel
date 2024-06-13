@@ -48,7 +48,7 @@ function StoryUpdate() {
 
     const handleClick = (id,title) => {
       console.log("Item Click:", id);
-      navigate(`/detail/${id}/${vietnameseToSlug(title)}`);
+      navigate(`/detail/${id}/${title}`);
     };
   // ----- Story Update End -----
 
@@ -117,7 +117,7 @@ function StoryUpdate() {
                   textAlign: "center",
                   position: "relative",
                 }}
-                onClick={() => handleClick(item.id, item.title)}
+                onClick={() => handleClick(item.id, item.titleUrl ? item.titleUrl : item.title)}
               >
                 <CardHeader style={{ paddingBottom: "0px" }}>
                   {item.is_full ? (

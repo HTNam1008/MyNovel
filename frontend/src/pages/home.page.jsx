@@ -5,7 +5,6 @@ import { Container, Row, Col } from "react-bootstrap";
 import { useTheme } from "../assets/context/theme.context.js";
 import StoryBeingRead from "../components/homePage/storyBeingRead.component.jsx";
 import StorySlide from "../components/homePage/storySlideShow.component.jsx";
-import { Flex } from "@chakra-ui/react";
 
 function HomePage() {
   // ----- Theme -----

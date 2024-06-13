@@ -130,19 +130,7 @@ const getStoryDownload = async (req, res) => {
     res.status(500).json({ error: "Error fetching data" });
   }
 };
-// const fetchStoryDetail = async (id) => {
-//   try {
-//     const response = await axios.get(`${API_URL}/v1/story/detail/${id}`, {
-//       headers: {
-//         "User-Agent": USER_AGENT,
-//       },
-//     });
-//     return response.data;
-//   } catch (error) {
-//     console.error('Error fetching story detail:', error);
-//     throw error;
-//   }
-// };
+
 
 module.exports = {
   name: "server1",
