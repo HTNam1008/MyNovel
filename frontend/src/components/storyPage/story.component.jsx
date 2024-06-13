@@ -13,6 +13,7 @@ import useStoryFetching from "../../services/story.service.js";
 import WebSocketService from "../../services/webSocket.service.js";
 import { useServer } from "../../assets/context/server.context.js";
 import Settings from "../../utils/setting.js";
+import "../../assets/styles/style.css";
 
 function Story({ chapterId, title, numChapter }) {
   const { selectedServer } = useServer();
@@ -153,153 +154,169 @@ function Story({ chapterId, title, numChapter }) {
     });
   };
 
-  const [showNavigationButtons, setShowNavigationButtons] = useState(false);
-  const [lastScrollY, setLastScrollY] = useState(0);
-
-  useEffect(() => {
-    const handleScroll = () => {
-      if (window.scrollY != lastScrollY) {
-        setShowNavigationButtons(true);
-        const timer = setTimeout(() => {
-          setShowNavigationButtons(false);
-        }, 4000); // Hide the buttons after 3 seconds
-
-        return () => clearTimeout(timer);
-      } else {
-        setShowNavigationButtons(false);
-      }
-      setLastScrollY(window.scrollY);
-    };
-
-    window.addEventListener("scroll", handleScroll);
-    return () => window.removeEventListener("scroll", handleScroll);
-  }, [lastScrollY]);
-
   const navigationButtons = (
     <div
       style={{
-        display: "flex",
-        justifyContent: "space-around",
-        alignItems: "center",
-        marginTop: "20px",
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center',
+        margin: '10px 0'
       }}
     >
       <Button
         onClick={handlePreviousChapter}
         style={{
-          backgroundColor: "#D3EBCD",
-          color: "#737373",
-          marignRight: "20px",
+          backgroundColor: '#D3EBCD',
+          color: '#737373',
+          marginRight: '40px',
         }}
       >
-        <span style={{ fontSize: "20px" }}>&larr;</span> Chương trước
+        <span style={{ fontSize: '20px' }}>&larr;</span> Chương trước
       </Button>
+      <div style={{ width: '40px' }} />
       <Button
         onClick={handleNextChapter}
         style={{
-          backgroundColor: "#80CEB1",
-          color: "white",
-          marignLeft: "20px",
+          backgroundColor: '#80CEB1',
+          color: 'white',
+          marginLeft: '40px',
         }}
       >
-        <span style={{ fontSize: "20px" }}>Chương tiếp</span> &rarr;
+        <span style={{ fontSize: '20px' }}>Chương tiếp</span> &rarr;
       </Button>
     </div>
   );
 
+  const [showNavigationButtons, setShowNavigationButtons] = useState(false);
+  //scrolling up and down and show navigation
+  useEffect(() => {
+    const handleScroll = () => {
+      if (window.scrollY > 100) {
+        setShowNavigationButtons(true);
+      } else {
+        setShowNavigationButtons(false);
+      }
+    };
+
+    window.addEventListener('scroll', handleScroll);
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+    };
+  }, []);
+
   // ----- setting end -----
 
   return (
-    <div
-      style={{
-        backgroundColor: settings.backgroundColor,
-        color: "black",
-        fontSize: `${settings.fontSize}px`,
-        fontFamily: settings.fontFamily,
-        maxWidth: `${settings.width}px`,
-        margin: "0 auto",
-        marginTop: "100px",
-        marginBottom: "50px",
-        padding: "20px",
-      }}
-    >
+    <div>
       <div
         style={{
-          display: "flex",
-          justifyContent: "space-between",
-          alignItems: "center",
-          marginBottom: "20px",
+          backgroundColor: settings.backgroundColor,
+          color: "black",
+          fontSize: `${settings.fontSize}px`,
+          fontFamily: settings.fontFamily,
+          maxWidth: `${settings.width}px`,
+          margin: "0 auto",
+          marginTop: "100px",
+          marginBottom: "50px",
+          padding: "20px",
         }}
       >
         <div
-          style={{ display: "flex", alignItems: "center", flexWrap: "wrap" }}
-        >
-          {loadingPlugins ? (
-            <div>Loading...</div>
-          ) : (
-            Array.isArray(dataPlugins) &&
-            dataPlugins.map((plugin) => (
-              <Button
-                key={plugin.name}
-                onClick={() => handlePluginClick(plugin.name)}
-                style={{
-                  margin: "5px",
-                  backgroundColor:
-                    activeServer === plugin.name ? "#80CEB1" : "#FFFF00",
-                  color: "black",
-                  display: "inline-block",
-                  alignItems: "center",
-                  textAlign: "center",
-                }}
-              >
-                {plugin.name}
-              </Button>
-            ))
-          )}
-        </div>
-        <Button onClick={openModal}>Hiển thị tùy chỉnh</Button>
-      </div>
-
-      <Modal isOpen={isOpen} onClose={closeModal}>
-        <ModalOverlay />
-        <ModalContent>
-          <ModalHeader>Tuỳ chỉnh</ModalHeader>
-          <ModalCloseButton />
-          <ModalBody>
-            <Settings onSettingsChange={handleSettingsChange} />
-          </ModalBody>
-          <ModalFooter>
-            <Button onClick={closeModal}>Đóng</Button>
-          </ModalFooter>
-        </ModalContent>
-      </Modal>
-
-      {loadingStory ? (
-        <div>Loading story...</div>
-      ) : (
-        <div
           style={{
             display: "flex",
-            justifyContent: "center",
+            justifyContent: "space-between",
             alignItems: "center",
-            flexDirection: "column",
+            marginBottom: "20px",
           }}
         >
-          <h1>{dataStory ? dataStory.story_name : 'Không tìm thấy nội dung'}</h1>
-          <h2>{dataStory?.chapter_name}</h2>
-          {navigationButtons}
+          <div
+            style={{ display: "flex", alignItems: "center", flexWrap: "wrap" }}
+          >
+            {loadingPlugins ? (
+              <div>Loading...</div>
+            ) : (
+              Array.isArray(dataPlugins) &&
+              dataPlugins.map((plugin) => (
+                <Button
+                  key={plugin.name}
+                  onClick={() => handlePluginClick(plugin.name)}
+                  style={{
+                    margin: "5px",
+                    backgroundColor:
+                      activeServer === plugin.name ? "#80CEB1" : "#FFFF00",
+                    color: "black",
+                    display: "inline-block",
+                    alignItems: "center",
+                    textAlign: "center",
+                  }}
+                >
+                  {plugin.name}
+                </Button>
+              ))
+            )}
+          </div>
+          <Button onClick={openModal}>Hiển thị tùy chỉnh</Button>
+        </div>
 
-          {_selectedServer === 'server1' ? (
-            <div dangerouslySetInnerHTML={{ __html: dataStory?.content }} />
-          ) : (
-            <div className="pre-wrapper" >
-              <pre style={{ backgroundColor: settings.backgroundColor, color: 'black', fontSize: `${settings.fontSize}px`, fontFamily: settings.fontFamily, maxWidth: `${settings.width}px`, margin: '0 auto', padding: '20px' }}>{dataStory?.content}</pre>
-            </div>
-          )}
+        <Modal isOpen={isOpen} onClose={closeModal}>
+          <ModalOverlay />
+          <ModalContent>
+            <ModalHeader>Tuỳ chỉnh</ModalHeader>
+            <ModalCloseButton />
+            <ModalBody>
+              <Settings onSettingsChange={handleSettingsChange} />
+            </ModalBody>
+            <ModalFooter>
+              <Button onClick={closeModal}>Đóng</Button>
+            </ModalFooter>
+          </ModalContent>
+        </Modal>
+
+        {loadingStory ? (
+          <div>Loading story...</div>
+        ) : (
+          <div
+            style={{
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center",
+              flexDirection: "column",
+            }}
+          >
+            <h1>{dataStory ? dataStory.story_name : 'Không tìm thấy nội dung'}</h1>
+            <h2>{dataStory?.chapter_name}</h2>
+            {navigationButtons}
+
+            {_selectedServer === 'server1' ? (
+              <div dangerouslySetInnerHTML={{ __html: dataStory?.content }} />
+            ) : (
+              <div className="pre-wrapper" >
+                <pre style={{ backgroundColor: settings.backgroundColor, color: 'black', fontSize: `${settings.fontSize}px`, fontFamily: settings.fontFamily, maxWidth: `${settings.width}px`, margin: '0 auto', padding: '20px' }}>{dataStory?.content}</pre>
+              </div>
+            )}
+          </div>
+        )}
+      </div>
+      {showNavigationButtons && (
+        <div
+          style={{
+            position: 'sticky',
+            bottom: '20px',
+            display: 'flex',
+            justifyContent: 'center',
+            alignItems: 'center',
+            margin: '0 auto',
+            backgroundColor: '#fff',
+            padding: '10px 10px',
+            borderRadius: '20px',
+            boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)',
+            width: '80%',
+            maxWidth: '600px',
+          }}
+        >
+          {navigationButtons}
         </div>
       )}
-
-      {showNavigationButtons && navigationButtons}
     </div>
   );
 }
