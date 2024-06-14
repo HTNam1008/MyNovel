@@ -1,11 +1,12 @@
 class WebSocketService {
-  constructor(url, interval = 15000) {
-    if (!WebSocketService.instance) {
+  constructor(url, interval = 15000,namePlugins) {
+    if (!WebSocketService.instance || WebSocketService.instance?.namePlugins !== namePlugins) {
       this.url = url;
       this.interval = interval;
       this.data = null;
       this.error = null;
       this.loading = false;
+      this.namePlugins = namePlugins;
       WebSocketService.instance = this;
     }
     return WebSocketService.instance;
@@ -16,7 +17,9 @@ class WebSocketService {
     try {
       const response = await fetch(this.url);
       const responseData = await response.json();
-      this.setData(responseData.data);
+
+      this.setData(responseData[this.namePlugins].data);
+
       this.setLoading(false);
       // Gọi hàm callback khi có dữ liệu mới được cập nhật
       if (this.onDataUpdateCallback) {
@@ -36,7 +39,7 @@ class WebSocketService {
   startPolling = () => {
     this.fetchData(); // Fetch data immediately on start
 
-    this.intervalId = setInterval(this.fetchData, this.interval); // Polling interval
+    this.intervalId = setInterval(() => this.fetchData(), this.interval); // Polling interval
   };
 
   stopPolling = () => {
@@ -67,55 +70,3 @@ class WebSocketService {
 }
 
 export default WebSocketService;
-
-// class WebSocketService {
-//   constructor(url) {
-//     this.url = url;
-//     this.ws = null;
-//     this.onDataUpdateCallback = null;
-//     this.onErrorHandler = null;
-//   }
-
-//   connect() {
-//     this.ws = new WebSocket(this.url);
-
-//     this.ws.onopen = () => {
-//       console.log("WebSocket connection opened");
-//     };
-
-//     this.ws.onmessage = (event) => {
-//       const data = JSON.parse(event.data);
-//       if (this.onDataUpdateCallback) {
-//         this.onDataUpdateCallback(data);
-//       }
-//     };
-
-//     this.ws.onerror = (error) => {
-//       console.error("WebSocket error:", error);
-//       if (this.onErrorHandler) {
-//         this.onErrorHandler(error);
-//       }
-//     };
-
-//     this.ws.onclose = () => {
-//       console.log("WebSocket connection closed");
-//     };
-//   }
-
-//   disconnect() {
-//     if (this.ws) {
-//       this.ws.close();
-//     }
-//   }
-
-//   setDataUpdateHandler(callback) {
-//     this.onDataUpdateCallback = callback;
-//   }
-
-//   setErrorHandler(callback) {
-//     this.onErrorHandler = callback;
-//   }
-// }
-
-// export default WebSocketService;
-

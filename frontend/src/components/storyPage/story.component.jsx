@@ -88,6 +88,7 @@ function Story({ chapterId, title, numChapter }) {
   // const clearReadingState = () => {
   //   localStorage.removeItem('currentReadingState');
   // };
+
   // clearReadingState()
   // ----- get server plugin -----
   const [dataPlugins, setDataPlugins] = useState(null);
@@ -95,7 +96,7 @@ function Story({ chapterId, title, numChapter }) {
   const [loadingPlugins, setLoading] = useState(true);
 
   useEffect(() => {
-    const webSocketService = new WebSocketService("/api/plugins/server");
+    const webSocketService = new WebSocketService("/api/plugins",15000,'server');
     webSocketService.startPolling();
     const handleDataUpdate = (data) => {
       setDataPlugins(data);

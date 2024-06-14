@@ -79,14 +79,14 @@ const loadPlugins = (app) => {
   loadAllPluginsExport();
 
   // API để lấy danh sách plugins server
-  app.get('/api/plugins/server', (req, res) => {
-    res.json({ data: pluginsServer });
+  app.get('/api/plugins', (req, res) => {
+    res.json({ server: {data: pluginsServer}, export:{data: pluginsExport}});
   });
 
   // API để lấy danh sách plugins export
-  app.get('/api/plugins/export', (req, res) => {
-    res.json({ data: pluginsExport });
-  });
+  // app.get('/api/plugins', (req, res) => {
+  //   res.json({ data: pluginsExport });
+  // });
   
   // Watch plugins server folder for changes
   fs.watch(pluginsPathServer, (eventType, filename) => {

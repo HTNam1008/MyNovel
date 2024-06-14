@@ -81,7 +81,7 @@ function StoryNew() {
           <Thead bg="#13ABA2">
             <Tr>
               <Th style={{ color: theme === "dark" ? "#fff" : "#000" }}>Tên</Th>
-              <Th style={{ color: theme === "dark" ? "#fff" : "#000" }}>Thể loại</Th>
+              <Th style={{ color: theme === "dark" ? "#fff" : "#000" }}> {data.categories ? 'Thể loại' : 'Tác giả'}</Th>
               <Th style={{ color: theme === "dark" ? "#fff" : "#000" }}>Số chương</Th>
               <Th style={{ color: theme === "dark" ? "#fff" : "#000" }}>
                 Lần cuối cập nhật
@@ -110,7 +110,7 @@ function StoryNew() {
 
                   <Tr key={index} className="text-table-link">
 
-                    <Td onClick={() => handleClick(item.id)} style={{
+                    <Td onClick={() => handleClick(item.id,item.titleUrl ? item.titleUrl : item.title)} style={{
                         maxWidth: "300px",
                         whiteSpace: "nowrap",
                         overflow: "hidden",
@@ -128,7 +128,7 @@ function StoryNew() {
                         whiteSpace: "nowrap",
                         overflow: "hidden",
                         textOverflow: "ellipsis",
-                      }}>{item.categories}</Td>
+                      }}>{item.categories ? item.categories : item.author}</Td>
                     <Td>{item.total_chapters}</Td>
                     <Td>{item.time}</Td>
                   </Tr>

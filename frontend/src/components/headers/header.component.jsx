@@ -79,9 +79,6 @@ function Header() {
   const [searchQuery, setSearchQuery] = useState("");
   const navigate = useNavigate();
   const handleSearch = () => {
-    // Thực hiện hành động tìm kiếm với searchQuery
-    console.log("Search query:", searchQuery);
-    // Ví dụ: redirect hoặc thực hiện tìm kiếm trong trang hiện tại
     navigate(`/search/:${searchQuery}`);
   };
 
@@ -104,14 +101,13 @@ function Header() {
   // ----- Set server default end -----
 
   // ----- Get list plugins -----
-
   const [dataPlugins, setDataPlugins] = useState(null);
   const [error, setError] = useState(null);
   const [loadingPlugins, setLoading] = useState(true); // Mặc định là true khi đang loading
 
   useEffect(() => {
-    // Tạo một instance của WebSocketService
-    const webSocketService = new WebSocketService("/api/plugins/server");
+    // Tạo một instance của WebSocketService cho component này
+    const webSocketService = new WebSocketService("/api/plugins", 15000,'server');
 
     // Xử lý sự kiện khi dữ liệu được cập nhật
     const handleDataUpdate = (data) => {
@@ -153,10 +149,7 @@ function Header() {
       const headerHeight = 0.55 * windowHeight;
 
       if (scrollPosition > headerHeight) {
-        // setHeaderBg("linear-gradient(to bottom,  #64CCC5, #176B87,#053B50)");
         setHeaderBg("linear-gradient(0, rgba(18, 18, 20, .68), transparent)");
-
-        
       } else {
         setHeaderBg("linear-gradient(180deg, rgba(18, 18, 20, .68), transparent)");
       }
@@ -334,7 +327,7 @@ function Header() {
                               key={plugin.endpoint}
                               type="radio"
                               label={plugin.name}
-                              name="server" // Giữ tên nhóm là "server"
+                              name="server"
                               id={`${plugin.name}`}
                               value={plugin.name}
                               checked={selectedServer === plugin.name}
