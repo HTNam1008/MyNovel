@@ -44,6 +44,9 @@ function Detail({ id, title }) {
     ? dataDetail.image
     : "https://www.huber-online.com/daisy_website_files/_processed_/8/0/csm_no-image_d5c4ab1322.jpg";
 
+
+
+
   return (
     <div
       style={{
@@ -126,7 +129,6 @@ function Detail({ id, title }) {
 
                 <div style={{marginTop:'20px', marginLeft:'20px'}}>
                     <ExportButton data={dataDetail} title={_title} />
-
                 </div>
                 </div>
 

@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { Dropdown, Button } from 'react-bootstrap';
 import axios from 'axios';
-import fetchExportPlugins from '../../services/export.service.js'; // Hàm gọi API để lấy danh sách plugins export
 import { useServer } from '../../assets/context/server.context.js';
+import WebSocketService from '../../services/webSocket.service.js';
 
 const ExportButton = ({ data, title }) => {
     const { selectedServer } = useServer();
@@ -10,11 +10,18 @@ const ExportButton = ({ data, title }) => {
     const [selectedPlugin, setSelectedPlugin] = useState(null);
 
     useEffect(() => {
-        const fetchData = async () => {
-            const plugins = await fetchExportPlugins();
-            setExportPlugins(plugins);
+        const pollingService = new WebSocketService('/api/plugins', 15000,'export');
+
+        const handleDataUpdate = (newData) => {
+            setExportPlugins(newData);
         };
-        fetchData();
+
+        pollingService.setDataUpdateHandler(handleDataUpdate);
+        pollingService.startPolling();
+
+        return () => {
+            pollingService.stopPolling();
+        };
     }, []);
 
     const handleExport = async (plugin) => {
@@ -28,7 +35,7 @@ const ExportButton = ({ data, title }) => {
                 responseType: 'blob',
             });
 
-            const fileExtension = plugin.name.toLowerCase().replace(/\s+/g, '_'); // Convert plugin name to a file extension
+            const fileExtension = plugin.name.toLowerCase().replace(/\s+/g, '_');
             const url = window.URL.createObjectURL(new Blob([response.data]));
             const link = document.createElement('a');
             link.href = url;
@@ -36,7 +43,6 @@ const ExportButton = ({ data, title }) => {
             document.body.appendChild(link);
             link.click();
 
-            // Clean up and revoke the object URL
             window.URL.revokeObjectURL(url);
             document.body.removeChild(link);
         } catch (error) {
