@@ -302,6 +302,11 @@ function Story({ chapterId, title, numChapter }) {
             <Skeleton height="20px" />
             <Skeleton height="20px" />
             <Skeleton height="20px" />
+            <Skeleton height="20px" />
+            <Skeleton height="20px" />
+            <Skeleton height="20px" />
+            <Skeleton height="20px" />
+
             {navigationButtons}
           </Stack>
         ) : (

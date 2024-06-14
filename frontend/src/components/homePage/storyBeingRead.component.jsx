@@ -8,6 +8,7 @@ const StoryBeingRead = () => {
   const [stories, setStories] = useState([]);
   const navigate = useNavigate();
   const { theme } = useTheme();
+  
   useEffect(() => {
     // Lấy dữ liệu từ LocalStorage và đảm bảo dữ liệu là một mảng
     const savedStories =
@@ -26,7 +27,7 @@ const StoryBeingRead = () => {
   };
 
   return (
-    <div style={{marginBottom: '50px'}}>
+    <div style={{ marginBottom: '50px' }}>
       <h2
         style={{
           color: theme === "dark" ? "#fff" : "#000",
@@ -51,6 +52,11 @@ const StoryBeingRead = () => {
           backgroundColor: theme === "dark" ? "#DDF2FD" : "#1D3557",
           color: theme === "dark" ? "#000" : "#fff",
           fontWeight: "bold",
+          minHeight:"0px",
+          maxHeight: '575px', // Set max height
+          overflowY: 'auto', // Enable vertical scrolling
+          padding: '10px', // Optional padding
+          borderRadius: '8px', // Optional for aesthetics
         }}
       >
         <ul>
@@ -65,7 +71,7 @@ const StoryBeingRead = () => {
                 )
               }
               className="story-item"
-              style={{fontWeight:"500"}}
+              style={{ fontWeight: "500" }}
             >
               <span>{story.title}</span>
               <span>&gt;</span>
