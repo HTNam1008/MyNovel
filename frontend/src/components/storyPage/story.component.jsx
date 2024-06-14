@@ -8,6 +8,8 @@ import {
   ModalCloseButton,
   ModalBody,
   ModalFooter,
+  Skeleton,
+  Stack,
 } from "@chakra-ui/react";
 import useStoryFetching from "../../services/story.service.js";
 import WebSocketService from "../../services/webSocket.service.js";
@@ -86,6 +88,7 @@ function Story({ chapterId, title, numChapter }) {
   // const clearReadingState = () => {
   //   localStorage.removeItem('currentReadingState');
   // };
+
   // clearReadingState()
   // ----- get server plugin -----
   const [dataPlugins, setDataPlugins] = useState(null);
@@ -93,7 +96,7 @@ function Story({ chapterId, title, numChapter }) {
   const [loadingPlugins, setLoading] = useState(true);
 
   useEffect(() => {
-    const webSocketService = new WebSocketService("/api/plugins/server");
+    const webSocketService = new WebSocketService("/api/plugins",15000,'server');
     webSocketService.startPolling();
     const handleDataUpdate = (data) => {
       setDataPlugins(data);
@@ -160,29 +163,33 @@ function Story({ chapterId, title, numChapter }) {
         display: 'flex',
         justifyContent: 'center',
         alignItems: 'center',
-        margin: '10px 0'
+        borderBottom: "1px solid #13ABA2", paddingBottom: "10px"
       }}
     >
       <Button
         onClick={handlePreviousChapter}
         style={{
-          backgroundColor: '#D3EBCD',
+          backgroundColor: '#B3E2A7',
           color: '#737373',
-          marginRight: '40px',
         }}
       >
-        <span style={{ fontSize: '20px' }}>&larr;</span> Chương trước
+        <span style={{ fontSize: '16px', fontFamily: 'Arial, sans-serif', fontWeight: '600' }}>
+          &larr; Chương trước
+        </span>
       </Button>
-      <div style={{ width: '40px' }} />
+      <div style={{ width: '40px' }} 
+      />
       <Button
         onClick={handleNextChapter}
         style={{
-          backgroundColor: '#80CEB1',
+          backgroundColor: '#80B9AD',
           color: 'white',
           marginLeft: '40px',
         }}
       >
-        <span style={{ fontSize: '20px' }}>Chương tiếp</span> &rarr;
+        <span style={{ fontSize: '16px', fontFamily: 'Arial, sans-serif', fontWeight: '600' }}>
+          Chương tiếp &rarr;
+        </span>
       </Button>
     </div>
   );
@@ -210,6 +217,8 @@ function Story({ chapterId, title, numChapter }) {
     <div>
       <div
         style={{
+          borderWidth:"20px",
+          borderColor:"#4D869C",
           backgroundColor: settings.backgroundColor,
           color: "black",
           fontSize: `${settings.fontSize}px`,
@@ -227,6 +236,8 @@ function Story({ chapterId, title, numChapter }) {
             justifyContent: "space-between",
             alignItems: "center",
             marginBottom: "20px",
+            borderBottom: "1px solid #13ABA2",
+            paddingBottom: "20px"
           }}
         >
           <div
@@ -242,12 +253,13 @@ function Story({ chapterId, title, numChapter }) {
                   onClick={() => handlePluginClick(plugin.name)}
                   style={{
                     margin: "5px",
-                    backgroundColor:
-                      activeServer === plugin.name ? "#80CEB1" : "#FFFF00",
-                    color: "black",
+                    backgroundColor: activeServer === plugin.name ? "#135D66" : "#4D869C",
+                    color: "white",
                     display: "inline-block",
                     alignItems: "center",
                     textAlign: "center",
+                    borderRadius: "15px",
+                    fontSize:"18px"
                   }}
                 >
                   {plugin.name}
@@ -255,7 +267,19 @@ function Story({ chapterId, title, numChapter }) {
               ))
             )}
           </div>
-          <Button onClick={openModal}>Hiển thị tùy chỉnh</Button>
+          <Button onClick={openModal} style={{
+                    margin: "5px",
+                    backgroundColor: "#BBE2EC",
+                    display: "inline-block",
+                    alignItems: "center",
+                    borderRadius: "15px",
+                  }} >
+                <img
+                  src={`${process.env.PUBLIC_URL}/images/edit.png`}
+                  alt="Edit"
+                  style={{ width: "30px", height: "30px", color:"white" }} // Adjust the size of the image
+                />
+          </Button>
         </div>
 
         <Modal isOpen={isOpen} onClose={closeModal}>
@@ -271,9 +295,16 @@ function Story({ chapterId, title, numChapter }) {
             </ModalFooter>
           </ModalContent>
         </Modal>
-
+        
         {loadingStory ? (
-          <div>Loading story...</div>
+          <Stack spacing={5}>
+            <Skeleton height="20px" />
+            <Skeleton height="20px" />
+            <Skeleton height="20px" />
+            <Skeleton height="20px" />
+            <Skeleton height="20px" />
+            {navigationButtons}
+          </Stack>
         ) : (
           <div
             style={{
@@ -283,12 +314,15 @@ function Story({ chapterId, title, numChapter }) {
               flexDirection: "column",
             }}
           >
+            
             <h1>{dataStory ? dataStory.story_name : 'Không tìm thấy nội dung'}</h1>
-            <h2>{dataStory?.chapter_name}</h2>
+            
+            <h2 style={{borderBottom: "1px solid #13ABA2", paddingBottom: "10px"}}>{dataStory?.chapter_name}</h2>
+
             {navigationButtons}
 
             {_selectedServer === 'server1' ? (
-              <div dangerouslySetInnerHTML={{ __html: dataStory?.content }} />
+              <div  dangerouslySetInnerHTML={{ __html: dataStory?.content }} />
             ) : (
               <div className="pre-wrapper" >
                 <pre style={{ backgroundColor: settings.backgroundColor, color: 'black', fontSize: `${settings.fontSize}px`, fontFamily: settings.fontFamily, maxWidth: `${settings.width}px`, margin: '0 auto', padding: '20px' }}>{dataStory?.content}</pre>
@@ -305,13 +339,12 @@ function Story({ chapterId, title, numChapter }) {
             display: 'flex',
             justifyContent: 'center',
             alignItems: 'center',
-            margin: '0 auto',
-            backgroundColor: '#fff',
-            padding: '10px 10px',
-            borderRadius: '20px',
-            boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)',
+            margin: '20px auto',
+            backgroundColor: 'transparent',
+            padding: '0px',
+            borderRadius: '10px',
             width: '80%',
-            maxWidth: '600px',
+            maxWidth: '450px',
           }}
         >
           {navigationButtons}

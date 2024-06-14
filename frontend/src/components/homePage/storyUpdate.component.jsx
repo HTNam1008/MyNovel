@@ -48,26 +48,29 @@ function StoryUpdate() {
   const navigate = useNavigate();
 
   const handleClick = (id, title) => {
-    console.log("Item Click:", id);
+    console.log("Item Click:", id,title);
     navigate(`/detail/${id}/${title}`);
   };
 
   const itemsPerPage = 10;
 
   const handlePageChange = (page) => {
+    if (page < 1) {
+      return;
+    }
     setCurrentPage(page);
   };
 
   const totalPages = Math.ceil((data?.total || 0) / itemsPerPage);
 
-  const getPaginationGroup = () => {
-    const groupStart = Math.max(1, currentPage - 1);
-    const groupEnd = Math.min(totalPages, groupStart + 2);
-    return Array.from(
-      { length: groupEnd - groupStart + 1 },
-      (_, idx) => groupStart + idx
-    );
-  };
+  // const getPaginationGroup = () => {
+  //   const groupStart = Math.max(1, currentPage - 1);
+  //   const groupEnd = Math.min(totalPages, groupStart + 2);
+  //   return Array.from(
+  //     { length: groupEnd - groupStart + 1 },
+  //     (_, idx) => groupStart + idx
+  //   );
+  // };
 
   const { theme } = useTheme();
 
@@ -191,6 +194,10 @@ function StoryUpdate() {
                       height="200px"
                       style={{ border: "1px solid #053B50" }}
                       className="card-image"
+                      onError={(e) => {
+                        e.target.onerror = null; // Prevents infinite loop in case the fallback image also fails
+                        e.target.src = `${process.env.PUBLIC_URL}/images/default-image.jpg`;
+                      }}
                     />
                   </CardHeader>
                   <CardBody style={{ flex: 1, padding: "5px" }}>

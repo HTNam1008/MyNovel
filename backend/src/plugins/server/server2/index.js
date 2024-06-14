@@ -395,7 +395,7 @@ const getStoryChapters = async (req, res) => {
     let chapters = parseInt($('#j-bookCatalogPage').text().match(regex)[0]);
     for (let i = 1; i <= chapters; i++) {
       chapterTitles.push({
-        id: "chuong-" + i.toString(),
+        id: 'content',
         title: "Chương " + i.toString()
       });
     }
