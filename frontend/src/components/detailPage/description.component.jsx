@@ -15,7 +15,7 @@ function StoryDescription({ description, maxLength, onToggle }) {
   }, [showFullDescription, description]);
 
   return (
-    <div className="story-description" style={{ minHeight:'400px',backgroundColor: 'transparent', padding: '20px',margin:"0px 40px 20px 40px", borderRadius: '5px',border: '1px solid #13ABA2' }}>
+    <div className="story-description" style={{ minHeight:'400px',backgroundColor: 'transparent', padding: '20px',margin:"0px 40px 20px 40px", borderRadius: '5px',border: '1px solid #13ABA2'}}>
       <div dangerouslySetInnerHTML={{ __html: showFullDescription ? description : truncatedDescription }} />
       {description && description.length > maxLength && (
         <span onClick={toggleDescription} style={{ cursor: 'pointer', color: '#13ABA2', fontWeight:"600" }}>
