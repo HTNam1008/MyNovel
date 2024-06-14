@@ -185,11 +185,14 @@ const getTimeDifference = (pastTime) => {
 
 const getStoryUpdate = async (req, res) => {
   try {
-    const url = `${BASE_URL}/tong-hop`;
+    const { page } = req.query;
+    page ? page : 1;
+    const url = `${BASE_URL}/tong-hop?page=${page}`;
+    console.log("URL: ",url)
     const html = await fetchHTML(url);
     const $ = cheerio.load(html);
     const bookResults = [];
-
+    
     let title, authorName, bookUrl, imageUrl, intro, genre, is_full, chapters, time,titleUrl;
     $('.main-content-wrap .rank-view-list li').each((index, element) => {
       title = $(element).find('.book-mid-info h4').text().trim();
