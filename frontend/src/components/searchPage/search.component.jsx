@@ -8,37 +8,39 @@ import {
   CardBody,
   Skeleton,
   SkeletonText,
+  Button,
 } from "@chakra-ui/react";
-
-import useSearchFetching from "../../services/search.service.js";
-
 import { useState, useEffect } from "react";
-
 import { useNavigate } from "react-router-dom";
-
 import { useTheme } from "../../assets/context/theme.context.js";
-
 import { useServer } from "../../assets/context/server.context.js";
-
+import useSearchFetching from "../../services/search.service.js";
 import "../../assets/styles/style.css";
-
 import { vietnameseToSlug } from "../../utils/function.js";
 
 function Search({ title }) {
   const { selectedServer } = useServer();
   const [storyData, setStoryData] = useState([]);
+  const [page, setPage] = useState(1);
+  const [fetching, setFetching] = useState(false);
 
   // Remove ":" from title
-  title.replace(/:/g, "");
+  title = title.replace(/:/g, "");
+
+  // Fetch data for the current page
   const { data, loading } = useSearchFetching(
-    `/${selectedServer}/search/${title}`
+    `/${selectedServer}/search/${title}?page=${page}`
   );
 
   useEffect(() => {
-    if (!loading && data && data.length > 0) {
-      setStoryData(data.slice(0, 12));
+    if (data && data.length > 0) {
+      setStoryData((prevData) => [...prevData, ...data.slice(0, 12)]);
     }
-  }, [data, loading]);
+  }, [data]);
+
+  useEffect(() => {
+    setFetching(loading);
+  }, [loading]);
 
   const navigate = useNavigate();
 
@@ -47,8 +49,14 @@ function Search({ title }) {
     navigate(`/detail/${id}/${vietnameseToSlug(title)}`);
   };
 
+  const loadMore = () => {
+    if (!fetching) {
+      setPage((prevPage) => prevPage + 1);
+    }
+  };
+
   const { theme } = useTheme();
-  // Remove ":" from title
+
   return (
     <>
       <VStack
@@ -67,7 +75,7 @@ function Search({ title }) {
         >
           Kết quả tìm kiếm cho từ "{title}"
         </Heading>
-        {loading
+        {fetching && page === 1
           ? Array.from({ length: 12 }).map((_, index) => (
               <Card
                 key={index}
@@ -79,8 +87,8 @@ function Search({ title }) {
                   alignItems: "center",
                   textAlign: "left",
                   position: "relative",
-                  width: "60%", // Adjust the width of the card here
-                  margin: "0 auto", // Center the card horizontally
+                  width: "60%",
+                  margin: "0 auto",
                 }}
               >
                 <CardHeader style={{ paddingRight: "10px" }}>
@@ -103,8 +111,8 @@ function Search({ title }) {
                   alignItems: "center",
                   textAlign: "left",
                   position: "relative",
-                  width: "60%", // Adjust the width of the card here
-                  margin: "0 auto", // Center the card horizontally
+                  width: "60%",
+                  margin: "0 auto",
                 }}
                 onClick={() =>
                   handleClick(
@@ -122,6 +130,10 @@ function Search({ title }) {
                     height="80px"
                     style={{ border: "1px solid #053B50" }}
                     className="card-image"
+                    onError={(e) => {
+                      e.target.onerror = null; // Prevents infinite loop in case the fallback image also fails
+                      e.target.src = `${process.env.PUBLIC_URL}/images/default-image.jpg`;
+                    }}
                   />
                 </CardHeader>
                 <CardBody style={{ flex: 1, padding: "5px" }}>
@@ -138,6 +150,23 @@ function Search({ title }) {
                 </CardBody>
               </Card>
             ))}
+        <div
+          style={{
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            
+          }}
+        >
+          <Button
+            onClick={() => loadMore()}
+            isLoading={fetching}
+            mt={4}
+            style={{ width: "20%" }}
+          >
+            Xem thêm
+          </Button>
+        </div>
       </VStack>
     </>
   );

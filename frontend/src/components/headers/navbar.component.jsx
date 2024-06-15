@@ -118,13 +118,13 @@ function NavBar({ theme, selectedServer, setSelectedServer }) {
           id="navbarScrollingDropdown"
         >
           {index === 0 &&
-            list.map((item, index) => (
+            list.map((item, itemIndex) => (
               <NavDropdown.Item
-                key={index}
+                key={itemIndex}
                 className="dropdown-item table-link"
                 onClick={handleNavigate}
                 as={Link}
-                to={`/list/${item}/${"none"}/${index}`}
+                to={`/list/${item}/${"none"}/${parseInt(itemIndex)+1}`}
               >
                 {item}
               </NavDropdown.Item>
@@ -137,7 +137,7 @@ function NavBar({ theme, selectedServer, setSelectedServer }) {
                   className="dropdown-item table-link"
                   onClick={handleNavigate}
                   as={Link}
-                  to={`/list/${"none"}/${item}/${itemIndex + 1}`}
+                  to={`/list/${"none"}/${item}/${parseInt(itemIndex) + 1}`}
                 >
                   {item}
                 </NavDropdown.Item>

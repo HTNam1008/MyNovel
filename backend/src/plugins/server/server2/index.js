@@ -110,7 +110,8 @@ const getStoryDownload = async (req, res) => {
 const getSearchStory = async (req, res) => {
   try {
     const _title = req.params.title;
-    const url = `${BASE_URL}/ket-qua-tim-kiem?term=${_title}`;
+    const {page} = req.query;
+    const url = `${BASE_URL}/ket-qua-tim-kiem?term=${_title}&page=${page}`;
     console.log("URL: ",url)
     const html = await fetchHTML(url);
     const $ = cheerio.load(html);

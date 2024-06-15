@@ -70,7 +70,8 @@ const getTimeDifference = (pastTime) => {
 const getSearchStory = async (req, res) => {
   try {
     const _title = req.params.title;
-    const url = `${BASE_URL}/tim-kiem?tukhoa=${_title}`;
+    const { page } = req.query;
+    const url = `${BASE_URL}/tim-kiem?tukhoa=${_title}&page=${page}`;
     const html = await fetchHTML(url);
     const $ = cheerio.load(html);
     const bookResults = [];

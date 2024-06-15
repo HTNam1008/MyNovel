@@ -7,7 +7,7 @@ function SearchForm() {
   const navigate = useNavigate();
 
   const handleSearch = () => {
-    navigate(`/search/${searchQuery}`);
+    navigate(`/search/${searchQuery}?page=${1}`);
   };
 
   const handleInputChange = (event) => {

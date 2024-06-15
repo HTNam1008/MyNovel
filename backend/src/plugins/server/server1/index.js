@@ -28,8 +28,9 @@ const getStoryContent = async (req, res) => {
 const getSearchStory = async (req, res) => {
   try {
     const title = req.params.title;
+    const {page} = req.query;
     // console.log('Search query 4:', title);
-    const response = await axios.get(`${API_URL}/v1/tim-kiem?title=${title}`, {
+    const response = await axios.get(`${API_URL}/v1/tim-kiem?title=${title}&page=${page}`, {
       headers: {
         "User-Agent": USER_AGENT,
       },
@@ -59,7 +60,7 @@ const getListStory = async (req, res) => {
         },
       });
   } else {
-    response = await axios.get(`${API_URL}/v1/story/cate?cate=${cate}&type=${'story_new'}page=${page}`, {
+    response = await axios.get(`${API_URL}/v1/story/cate?cate=${cate}&type=${'story_new'}&page=${page}`, {
       headers: {
         "User-Agent": USER_AGENT,
       },
