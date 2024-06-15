@@ -51,9 +51,6 @@ const getStoryContent = async (req, res) => {
   } catch (error) {
     console.error(error);
     const data = {
-      data: {
-        content: "Error fetching data"
-      }
     };
     res.status(500).json(data);
   }
@@ -110,10 +107,11 @@ const getStoryDownload = async (req, res) => {
   }
 };
 
-const searchStory = async (req, res) => {
+const getSearchStory = async (req, res) => {
   try {
     const _title = req.params.title;
     const url = `${BASE_URL}/ket-qua-tim-kiem?term=${_title}`;
+    console.log("URL: ",url)
     const html = await fetchHTML(url);
     const $ = cheerio.load(html);
     const bookResults = [];
@@ -129,20 +127,17 @@ const searchStory = async (req, res) => {
       imageUrl = $(element).find('.book-img-box img.lazy').attr('src');
       intro = $(element).find('.book-mid-info .intro').text().trim();
 
-
       bookResults.push({
-        book: {
+        
           title: title,
           author: authorName,
           image: imageUrl,
           categories: genre,
           total_chapters: chapters,
           is_full: is_full
-        }
       });
     });
-
-    res.json(bookResults); // Trả về dữ liệu cho client
+    res.json({data: bookResults}); // Trả về dữ liệu cho client
   } catch (error) {
     console.error(error);
     //res.status(500).json({ error: "Error fetching data" });
@@ -271,6 +266,66 @@ const getStoryNew = async (req, res) => {
     res.status(500).json({ error: "Error fetching data" });
   }
 };
+const getListStory = async (req, res) => {
+  try {
+    const {cate, type, page,index} = req.query;
+    let rank;
+    let fns;
+
+    if (type=== "truyen_hot") {
+      rank = "vw";
+    } else if (type=== "truyen_full") {
+      fns='ht'
+    } else {
+      rank="",
+      fns=""
+    }
+
+
+    const url = `${BASE_URL}/tong-hop?fns=${fns}&rank=${rank}&page=${page}&ctg=${index}`;
+
+    const html = await fetchHTML(url);
+    const $ = cheerio.load(html);
+    const bookResults = [];
+
+    let title, authorName, bookUrl,is_full, imageUrl, intro, genre, status, chapters, time,titleUrl;
+
+    $('.main-content-wrap .rank-view-list li').each((index, element) => {
+      title = $(element).find('.book-mid-info h4').text().trim();
+      authorName = $(element).find('.book-mid-info .author .name').text().trim();
+      genre = $(element).find('.author a[href*="/the-loai/"]').text().trim();
+      is_full = ($(element).find('.book-mid-info .author span:first').text().trim() == "Đang ra") ? false : true;
+      status = $(element).find('.book-mid-info .author span:first').text().trim();
+      chapters = $(element).find('.book-mid-info .author .KIBoOgno').text().trim();
+      time = $(element).find('.book-mid-info .update span').text().trim();
+      bookUrl = $(element).find('.book-mid-info h4 a').attr('href');
+      titleUrl = bookUrl.substring(bookUrl.lastIndexOf("/") + 1);
+
+      imageUrl = $(element).find('.book-img-box img.lazy').attr('src');
+      intro = $(element).find('.book-mid-info .intro').text().trim();
+
+      bookResults.push({
+       
+          title: title,
+          titleUrl: titleUrl,
+          image: imageUrl,
+          author: authorName,
+          is_full: is_full,
+          total_chapters: chapters,
+          time: getTimeDifference(time),
+          categories: genre
+        
+      });
+    });
+
+    res.json({data: bookResults}); // Trả về dữ liệu cho client
+    // console.log("new: ",bookResults);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: "Error fetching data" });
+  }
+};
+
 
 const getStoryFinish = async (req, res) => {
   try {
@@ -411,7 +466,8 @@ const getStoryChapters = async (req, res) => {
 module.exports = {
   name: "server2",
   getStoryContent,
-  searchStory,
+  getSearchStory,
+  getListStory,
   getStoryUpdate,
   getStoryNew,
   getStoryFinish,

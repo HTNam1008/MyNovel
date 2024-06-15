@@ -1,32 +1,36 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Button } from '@chakra-ui/react';
 import './setting.css';
-const Settings = ({ onSettingsChange }) => {
-  const [settings, setSettings] = useState({
-    backgroundColor: '#ffffff',
-    fontSize: 26,
-    fontFamily: 'Palatino',
-    width: 900,
-  });
+
+const Settings = ({ currentSettings, onSettingsChange }) => {
+  const [settings, setSettings] = useState(currentSettings);
+
+  useEffect(() => {
+    setSettings(currentSettings);
+  }, [currentSettings]);
 
   const handleThemeChange = (color) => {
-    setSettings((prevSettings) => ({ ...prevSettings, backgroundColor: color }));
-    onSettingsChange({ ...settings, backgroundColor: color });
+    const newSettings = { ...settings, backgroundColor: color };
+    setSettings(newSettings);
+    onSettingsChange(newSettings);
   };
 
   const handleFontSizeChange = (size) => {
-    setSettings((prevSettings) => ({ ...prevSettings, fontSize: size }));
-    onSettingsChange({ ...settings, fontSize: size });
+    const newSettings = { ...settings, fontSize: size };
+    setSettings(newSettings);
+    onSettingsChange(newSettings);
   };
 
   const handleFontFamilyChange = (font) => {
-    setSettings((prevSettings) => ({ ...prevSettings, fontFamily: font }));
-    onSettingsChange({ ...settings, fontFamily: font });
+    const newSettings = { ...settings, fontFamily: font };
+    setSettings(newSettings);
+    onSettingsChange(newSettings);
   };
 
   const handleWidthChange = (width) => {
-    setSettings((prevSettings) => ({ ...prevSettings, width }));
-    onSettingsChange({ ...settings, width });
+    const newSettings = { ...settings, width };
+    setSettings(newSettings);
+    onSettingsChange(newSettings);
   };
 
   return (

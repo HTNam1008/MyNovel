@@ -1,8 +1,8 @@
-// components/homePage/storyBeingRead.component.js
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react"; 
 import { useNavigate } from "react-router-dom";
 import "../../assets/styles/style.css";
 import { useTheme } from "../../assets/context/theme.context.js";
+
 
 const StoryBeingRead = () => {
   const [stories, setStories] = useState([]);
@@ -53,7 +53,6 @@ const StoryBeingRead = () => {
           color: theme === "dark" ? "#000" : "#fff",
           fontWeight: "bold",
           minHeight:"0px",
-          maxHeight: '575px', // Set max height
           overflowY: 'auto', // Enable vertical scrolling
           padding: '10px', // Optional padding
           borderRadius: '8px', // Optional for aesthetics
@@ -84,4 +83,4 @@ const StoryBeingRead = () => {
   );
 };
 
-export default StoryBeingRead;
+export default StoryBeingRead

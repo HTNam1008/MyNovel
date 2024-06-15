@@ -15,16 +15,21 @@ import useStoryFetching from "../../services/story.service.js";
 import WebSocketService from "../../services/webSocket.service.js";
 import { useServer } from "../../assets/context/server.context.js";
 import Settings from "../../utils/setting.js";
-import { useTheme } from "../../assets/context/theme.context.js";
 
 function Story({ chapterId, title, numChapter }) {
+
+  // ----- get server default -----
   const { selectedServer } = useServer();
   const [_selectedServer, _setSelectedServer] = useState(selectedServer);
+  // ----- get server default end -----
+
+  // ----- get data from API -----
   const [_chapterId, setChapterId] = useState(chapterId);
   const [_numChapter, setNumChapter] = useState(numChapter);
 
   const storyUrl = `/${_selectedServer}/story/${_chapterId}/${title}/${_numChapter}`;
   const { dataStory, loadingStory } = useStoryFetching(storyUrl);
+  // ----- get data from API end -----
 
   // ----- get reading state from local storage -----
   useEffect(() => {
@@ -76,20 +81,23 @@ function Story({ chapterId, title, numChapter }) {
     }
   }, [_chapterId, _numChapter, title, dataStory]);
 
-  // ----- save reading state to local storage -----
+  // ----- save reading state to local storage end -----
 
+  // ----- handle change color button server -----
   const [activeServer, setActiveServer] = useState(_selectedServer);
 
   const handlePluginClick = (pluginName) => {
     _setSelectedServer(pluginName);
     setActiveServer(pluginName);
   };
+  // ----- handle change color button server end-----
 
   // const clearReadingState = () => {
   //   localStorage.removeItem('currentReadingState');
   // };
 
   // clearReadingState()
+  
   // ----- get server plugin -----
   const [dataPlugins, setDataPlugins] = useState(null);
   const [error, setError] = useState(null);
@@ -127,6 +135,9 @@ function Story({ chapterId, title, numChapter }) {
     setSettings(newSettings);
   };
 
+  // ----- setting end -----
+
+  // ----- modal -----
   const [isOpen, setIsOpen] = useState(false);
 
   const openModal = () => {
@@ -136,7 +147,9 @@ function Story({ chapterId, title, numChapter }) {
   const closeModal = () => {
     setIsOpen(false);
   };
+  // ----- modal end -----
 
+  // ----- handle next and previous chapter -----
   const handleNextChapter = () => {
     setChapterId((prevChapterId) => parseInt(prevChapterId) + 1);
     setNumChapter((prevNumChapter) => {
@@ -147,15 +160,17 @@ function Story({ chapterId, title, numChapter }) {
   };
 
   const handlePreviousChapter = () => {
-    setChapterId((prevChapterId) =>
-      parseInt(prevChapterId) > 1 ? parseInt(prevChapterId) - 1 : 1
-    );
     setNumChapter((prevNumChapter) => {
       let num = parseInt(prevNumChapter.split("-")[1]);
       num = num > 1 ? num - 1 : 1;
       return "chuong-" + num;
     });
+
+    setChapterId((prevChapterId) =>
+      (parseInt(dataStory.chapter_prev) === null || parseInt(_numChapter.split("-")[1]) > 1) ? parseInt(prevChapterId) - 1 : parseInt(prevChapterId)
+    );
   };
+  // ----- handle next and previous chapter end -----
 
   const navigationButtons = (
     <div
@@ -288,7 +303,7 @@ function Story({ chapterId, title, numChapter }) {
             <ModalHeader>Tuỳ chỉnh</ModalHeader>
             <ModalCloseButton />
             <ModalBody>
-              <Settings onSettingsChange={handleSettingsChange} />
+              <Settings currentSettings={settings} onSettingsChange={handleSettingsChange} />
             </ModalBody>
             <ModalFooter>
               <Button onClick={closeModal}>Đóng</Button>

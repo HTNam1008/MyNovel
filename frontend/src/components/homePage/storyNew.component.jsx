@@ -9,7 +9,6 @@ import {
   Skeleton,
 } from "@chakra-ui/react";
 
-import { vietnameseToSlug } from "../../utils/function.js";
 
 import useSearchFetching from "../../services/search.service.js";
 
@@ -34,8 +33,8 @@ function StoryNew() {
 
   useEffect(() => {
     if (!loading && data && data.length > 0) {
-      // Lấy 5 phần tử đầu tiên từ data và cập nhật state
-      setStoryNewData(data.slice(0, 10));
+      // Lấy 20 phần tử đầu tiên từ data và cập nhật state
+      setStoryNewData(data.slice(0, 20));
     }
   }, [data, loading]);
 
@@ -46,6 +45,8 @@ function StoryNew() {
     navigate(`/detail/${id}/${title}`);
   };
   // ----- Story new End -----
+
+  
   // ----- Theme -----
   const { theme } = useTheme();
   // ----- Theme End -----
@@ -70,6 +71,8 @@ function StoryNew() {
       >
         Truyện mới đăng
       </h2>
+
+      
       <TableContainer style={{ color: "#DDF2FD", borderRadius:"10px"}}>
         <Table
           variant="simple"

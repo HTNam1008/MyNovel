@@ -15,17 +15,27 @@ import ExportButton from "./export.component.jsx";
 
 function Detail({ id, title }) {
   let _title = title;
+
+  // ----- Get Server Default -----
   const { selectedServer } = useServer();
+
+  // ----- Get Server Default End -----
+
+  // ----- get data from API -----
   const { dataDetail } = useDetailFetching(
     `/${selectedServer}/detail/${id}/${title}`
   );
-  // console.log(dataDetail.description)
   const { dataChapters } = useChapterFetching(
     `/${selectedServer}/chapters/${id}/${title}`
   );
-  const { theme } = useTheme();
-  const navigate = useNavigate();
+  // ----- get data from API end -----
 
+  // ----- get theme -----
+  const { theme } = useTheme();
+
+  // ----- get theme end -----
+
+  // ----- handle description resize -----
   const [descriptionHeight, setDescriptionHeight] = useState(0);
   const descriptionRef = useRef(null);
 
@@ -38,6 +48,11 @@ function Detail({ id, title }) {
   useEffect(() => {
     handleDescriptionResize();
   }, [dataDetail]);
+  
+  // ----- handle description resize -----
+
+  // ----- handle navigate to read story -----
+  const navigate = useNavigate();
 
   const handleRead = (chapterId, _title, numChapter) => {
     navigate(`/story/${chapterId}/${_title}/${numChapter}`);
@@ -46,10 +61,14 @@ function Detail({ id, title }) {
   const readFirstChap = (chapterId, _title) => {
     navigate(`/story/${chapterId}/${_title}/chuong-1`);
   };
+  // ----- handle navigate to read story end -----
 
+  // ----- picture default if data failed -----
   const imageUrl = dataDetail?.image
     ? dataDetail.image
     : "https://www.huber-online.com/daisy_website_files/_processed_/8/0/csm_no-image_d5c4ab1322.jpg";
+
+  // ----- picture default if data failed end -----
 
   return (
     <div
@@ -279,8 +298,13 @@ function Detail({ id, title }) {
                     </li>
                   ))
                 ) : (
-                  <div style={{ color: theme === 'dark' ? '#000': '#fff', display: "flex", justifyContent: "center" }}>
-
+                  <div
+                    style={{
+                      color: theme === "dark" ? "#000" : "#fff",
+                      display: "flex",
+                      justifyContent: "center",
+                    }}
+                  >
                     Truyện đang ra, chưa có nội dung
                   </div>
                 )}

@@ -10,8 +10,8 @@ import Footer from "./components/footers/footer.component";
 import { ChakraProvider } from "@chakra-ui/react";
 import { ThemeProvider } from "./assets/context/theme.context";
 import { ServerProvider } from "./assets/context/server.context";
-import StoryBeingRead from "./components/homePage/storyBeingRead.component";
-
+import SearchNavbarPage from "./pages/searchNavbar.page";
+// import StoryBeingRead from "./components/homePage/storyBeingRead.component";
 function App() {
   return (
     <ChakraProvider>
@@ -22,6 +22,7 @@ function App() {
             {/* Đảm bảo route cho StoryBeingRead không trùng với HomePage */}
             <Route path="/" element={<HomePage />} />
             <Route path="/search/:title" element={<SearchPage />} />
+            <Route path="/list/:type/:cate/:index" element={<SearchNavbarPage />} />
             <Route path="/detail/:id/:title" element={<DetailPage />} />
             <Route
               path="/story/:chapterId/:title/:numChapter"

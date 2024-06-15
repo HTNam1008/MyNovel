@@ -33,6 +33,7 @@ function StoryUpdate() {
 
   // ----- Get Server Default End -----
 
+  // ----- get data from API -----
   const [currentPage, setCurrentPage] = useState(1);
   const [storyUpdateData, setStoryUpdateData] = useState([]);
 
@@ -51,7 +52,10 @@ function StoryUpdate() {
     console.log("Item Click:", id,title);
     navigate(`/detail/${id}/${title}`);
   };
+  // ----- get data from API end -----
 
+
+  // ----- Pagination -----
   const itemsPerPage = 10;
 
   const handlePageChange = (page) => {
@@ -62,18 +66,12 @@ function StoryUpdate() {
   };
 
   const totalPages = Math.ceil((data?.total || 0) / itemsPerPage);
+ // ----- Pagination End -----
 
-  // const getPaginationGroup = () => {
-  //   const groupStart = Math.max(1, currentPage - 1);
-  //   const groupEnd = Math.min(totalPages, groupStart + 2);
-  //   return Array.from(
-  //     { length: groupEnd - groupStart + 1 },
-  //     (_, idx) => groupStart + idx
-  //   );
-  // };
 
+ // ----- getTheme -----
   const { theme } = useTheme();
-
+  // ----- getTheme End -----
   return (
     <>
       <h2
@@ -226,17 +224,6 @@ function StoryUpdate() {
           </Image>
         </div>
       </div>
-      {/* <div className="pagination">
-        {getPaginationGroup().map((page) => (
-          <button
-            key={page}
-            onClick={() => handlePageChange(page)}
-            className={currentPage === page ? "active" : ""}
-          >
-            {page}
-          </button>
-        ))}
-      </div> */}
     </>
   );
 }

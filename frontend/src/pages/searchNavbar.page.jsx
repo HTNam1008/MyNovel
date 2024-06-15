@@ -1,18 +1,18 @@
 import React from 'react'
 import { useParams } from 'react-router-dom';
-import Search from '../components/searchPage/search.component';
+import SearchNavbar from '../components/searchPage/searchNavbar.component.jsx';
 import { useTheme } from "../assets/context/theme.context.js";
 
-function SearchPage() {
+function SearchNavbarPage() {
    // ----- Theme -----
   const { theme } = useTheme();
-  const {title} = useParams();
+  const {type , cate,index} = useParams();
   // console.log('Search query 2:', title);
   return (
     <div style={{ backgroundColor: theme === "dark" ? "#1D3557" : "#E3F4F4" }}>
-      <Search title={title} />
+      <SearchNavbar type={type} cate={cate} index={index} />
     </div>
   )
 }
 
-export default SearchPage
+export default SearchNavbarPage

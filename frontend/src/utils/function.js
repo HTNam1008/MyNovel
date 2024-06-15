@@ -15,7 +15,25 @@ function vietnameseToSlug(str) {
     // Thay thế khoảng trắng bằng dấu gạch ngang
     return str.replace(/\s+/g, "-").replace(/[^a-z0-9-]/g, '').replace(/^-+|-+$/g, '');
   }
+  function vietnameseTo_(str) {
+    // Chuyển đổi chuỗi thành chữ thường
+    str = str.toLowerCase();
   
+    // Loại bỏ các ký tự đặc biệt, ký tự có dấu
+    const fromChars =
+      "àáãạảăằắẵặẳâầấẫậẩèéẽẹẻêềếễệểìíĩịỉòóõọỏôồốỗộổơờớỡợởùúũụủưừứữựửỳýỹỵỷđ";
+    const toChars =
+      "aaaaaaaaaaaaaaaaaeeeeeeeeeeeiiiiiooooooooooooooooouuuuuuuuuuuyyyyyd";
+  
+    for (let i = 0; i < fromChars.length; i++) {
+      str = str.replace(new RegExp(fromChars.charAt(i), "g"), toChars.charAt(i));
+    }
+  
+    // Thay thế khoảng trắng bằng dấu gạch ngang
+    return str.replace(/\s+/g, "_").replace(/[^a-z0-9_]/g, '').replace(/^-+|_+$/g, '');
+
+  }
+
   function getSubstringBeforeColon(inputString) {
     // Tìm vị trí của dấu ":"
     const colonIndex = inputString.indexOf(":");
@@ -31,4 +49,4 @@ function vietnameseToSlug(str) {
     return trimmedSubstring;
   }
 
-export { vietnameseToSlug, getSubstringBeforeColon };
+export { vietnameseToSlug, getSubstringBeforeColon ,vietnameseTo_};

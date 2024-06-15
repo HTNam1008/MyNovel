@@ -67,7 +67,7 @@ const getTimeDifference = (pastTime) => {
 };
 
 //xong
-const searchStory = async (req, res) => {
+const getSearchStory = async (req, res) => {
   try {
     const _title = req.params.title;
     const url = `${BASE_URL}/tim-kiem?tukhoa=${_title}`;
@@ -96,19 +96,107 @@ const searchStory = async (req, res) => {
       })();
 
       bookResults.push({
-        book: {
+        title: title,
+        titleUrl: titleInUrl,
+        image: imageUrl,
+        author: authorName,
+        total_chapters: chapterNumber,
+        categories: "none",
+      });
+    });
+    // console.log(bookResults);
+    res.json({ data: bookResults }); // Trả về dữ liệu cho client
+  } catch (error) {
+    // console.error(error);
+    res.status(500).json({ error: "Error fetching data" });
+  }
+};
+
+const getListStory = async (req, res) => {
+  try {
+    const { cate, type, page } = req.query;
+    if (type !== "none") {
+      let _type = type;
+
+      if (type === "truyen_moi_cap_nhat") {
+        _type = "truyen_moi";
+      }
+      const url = `${BASE_URL}/danh-sach/${_type.replace(
+        "_",
+        "-"
+      )}/trang-${page}`;
+      const html = await fetchHTML(url);
+      const $ = cheerio.load(html);
+      const bookResults = [];
+
+      $(".grid.grid-cols-12").each((index, element) => {
+        let imageUrl, title, bookUrl, titleInUrl, authorName, totalChapter;
+        //console.log($(element).attr('class'));
+        imageUrl = $(element).find(".col-span-3 a img").attr("src");
+        title = $(element).find(".col-span-9 .w-full .flex:first h3 a").text();
+        bookUrl = $(element)
+          .find(" .col-span-9 .w-full .flex:first h3 a")
+          .attr("href");
+        titleInUrl = BASE_URL + bookUrl.substring(bookUrl.lastIndexOf("/"));
+        authorName = $(element)
+          .find(".col-span-9 .w-full .flex:eq(1) span:last")
+          .text();
+        totalChapter = $(element)
+          .find('.col-span-9 .w-full a[rel="nofollow"]')
+          .text();
+        const chapterNumber = (() => {
+          const match = totalChapter.match(/\d+/);
+          return match ? parseInt(match[0]) : null;
+        })();
+
+        bookResults.push({
           title: title,
           titleUrl: titleInUrl,
           image: imageUrl,
           author: authorName,
           totalChapter: chapterNumber,
-        },
+        });
       });
-    });
+      res.json({ data: bookResults }); // Trả về dữ liệu cho client
+    } else {
+      const url = `${BASE_URL}/the-loai/${cate}/trang-${page}`;
+      const html = await fetchHTML(url);
+      const $ = cheerio.load(html);
+      const bookResults = [];
+
+      $(".grid.grid-cols-12").each((index, element) => {
+        let imageUrl, title, bookUrl, titleInUrl, authorName, totalChapter;
+        //console.log($(element).attr('class'));
+        imageUrl = $(element).find(".col-span-3 a img").attr("src");
+        title = $(element).find(".col-span-9 .w-full .flex:first h3 a").text();
+        bookUrl = $(element)
+          .find(" .col-span-9 .w-full .flex:first h3 a")
+          .attr("href");
+        titleInUrl = BASE_URL + bookUrl.substring(bookUrl.lastIndexOf("/"));
+        authorName = $(element)
+          .find(".col-span-9 .w-full .flex:eq(1) span:last")
+          .text();
+        totalChapter = $(element)
+          .find('.col-span-9 .w-full a[rel="nofollow"]')
+          .text();
+        const chapterNumber = (() => {
+          const match = totalChapter.match(/\d+/);
+          return match ? parseInt(match[0]) : null;
+        })();
+
+        bookResults.push({
+          title: title,
+          titleUrl: titleInUrl,
+          image: imageUrl,
+          author: authorName,
+          totalChapter: chapterNumber,
+        });
+      });
+      res.json({ data: bookResults }); // Trả về dữ liệu cho client
+    }
     // console.log(bookResults);
-    res.json(bookResults); // Trả về dữ liệu cho client
   } catch (error) {
-    // console.error(error);
+    console.error(error);
     res.status(500).json({ error: "Error fetching data" });
   }
 };
@@ -148,11 +236,7 @@ const getStoryContent = async (req, res) => {
     res.json(responseData);
   } catch (error) {
     console.error(error);
-    const data = {
-      data: {
-        content: "Error fetching data",
-      },
-    };
+    const data = {};
     res.status(500).json(data);
   }
 };
@@ -377,7 +461,7 @@ const getNumChapter = async (title) => {
 
 // const getNumChapter = async (req, res) => {
 //   try {
-//     const storyName = req.params.title; 
+//     const storyName = req.params.title;
 //     const url = `${BASE_URL}/${storyName}`;
 //     const html = await fetchHTML(url);
 //     const $ = cheerio.load(html);
@@ -406,7 +490,7 @@ const getNumChapter = async (title) => {
 
 const _getStoryContent = async (_title, numberChapter) => {
   try {
-    let _numberChapter = 'chuong-'+numberChapter;
+    let _numberChapter = "chuong-" + numberChapter;
 
     const url = `${BASE_URL}/${_title}/${_numberChapter}`;
     //const url = `${BASE_URL}/chi-ton-tu-la/chuong-1`;
@@ -426,16 +510,16 @@ const _getStoryContent = async (_title, numberChapter) => {
 
     // Tạo đối tượng JSON
     const responseData = {
-        story_name: storyTitle,
-        chapter_name: chapterTitle,
-        content: chapterContent,
+      story_name: storyTitle,
+      chapter_name: chapterTitle,
+      content: chapterContent,
     };
     //console.log(JSON.stringify(responseData, null, 2));
-   return responseData;
+    return responseData;
   } catch (error) {
     console.error(error);
     return {
-      content: "Error fetching data"
+      content: "Error fetching data",
     };
   }
 };
@@ -489,7 +573,6 @@ const getStoryDownload = async (req, res) => {
 //   }
 // };
 
-
 const getStoryChapters = async (req, res) => {
   try {
     const storyName = req.params.title;
@@ -535,7 +618,7 @@ const getStoryChapters = async (req, res) => {
 module.exports = {
   name: "server3",
   getStoryContent,
-  searchStory,
+  getSearchStory,
   getStoryUpdate,
   getStoryNew,
   getStoryFinish,
@@ -543,4 +626,5 @@ module.exports = {
   getNumChapter,
   getStoryDownload,
   getStoryChapters,
+  getListStory,
 };

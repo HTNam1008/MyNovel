@@ -25,7 +25,7 @@ const getStoryContent = async (req, res) => {
   }
 };
 
-const searchStory = async (req, res) => {
+const getSearchStory = async (req, res) => {
   try {
     const title = req.params.title;
     // console.log('Search query 4:', title);
@@ -41,11 +41,43 @@ const searchStory = async (req, res) => {
     res.status(500).json({ error: "Error fetching data" });
   }
 };
+const getListStory = async (req, res) => {
+  try {
+    const {cate, type, page} = req.query;
+    let response;
+    if (type !== 'none') {
+      let _type="";
 
+      if (type == "truyen_hot") {_type="story_view"; }
+      else if (type== "truyen_moi_cap_nhat") {_type="story_update"; }
+      else if (type=="truyen_full") {_type="story_full";}
+      console.log(cate, type, page, _type)
+      // console.log('Search query 4:', title);
+      response = await axios.get(`${API_URL}/v1/story/all?cate=${cate}&type=${_type}&page=${page}`, {
+        headers: {
+          "User-Agent": USER_AGENT,
+        },
+      });
+  } else {
+    response = await axios.get(`${API_URL}/v1/story/cate?cate=${cate}&type=${'story_new'}page=${page}`, {
+      headers: {
+        "User-Agent": USER_AGENT,
+      },
+    });
+  }
+    // console.log(response.data);
+    res.json(response.data); // Trả về dữ liệu cho client
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: "Error fetching data" });
+  }
+};
 const getStoryUpdate = async (req, res) => {
   try {
+    const { page } = req.query;
+    page ? page : 1;
     const response = await axios.get(
-      `${API_URL}/v1/story/index?type=story_update`,
+      `${API_URL}/v1/story/all?type=story_update&page=${page}`,
       {
         headers: {
           "User-Agent": USER_AGENT,
@@ -135,11 +167,12 @@ const getStoryDownload = async (req, res) => {
 module.exports = {
   name: "server1",
     getStoryContent,
-    searchStory,
+    getSearchStory,
     getStoryUpdate,
     getStoryNew,
     getStoryDetail,
     getStoryChapters,
     getStoryDownload,
+    getListStory
     // fetchStoryDetail,
 };
