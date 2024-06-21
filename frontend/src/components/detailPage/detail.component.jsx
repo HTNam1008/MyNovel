@@ -59,7 +59,8 @@ function Detail({ id, title }) {
   };
 
   const readFirstChap = (chapterId, _title) => {
-    navigate(`/story/${chapterId}/${_title}/chuong-1`);
+    const numChapter='chuong-1';
+    navigate(`/story/${chapterId}/${_title}/${numChapter}`);
   };
   // ----- handle navigate to read story end -----
 

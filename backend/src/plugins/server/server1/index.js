@@ -8,7 +8,6 @@ const USER_AGENT = process.env.USER_AGENT || "Edg/124.0.0.0";
 const getStoryContent = async (req, res) => {
   try {
     const chapter = req.params.chapterId;
-    // console.log('Search query 4:', id);
     const response = await axios.get(
       `${API_URL}/v1/chapter/detail/${chapter}`,
       {
@@ -129,7 +128,6 @@ const getStoryDetail = async (req, res) => {
 const getStoryChapters = async (req, res) => {
   try {
     const id = req.params.id;
-    console.log("Search query 4:", id);
     const response = await axios.get(
       `${API_URL}/v1/story/detail/${id}/chapters`,
       {
@@ -175,5 +173,4 @@ module.exports = {
     getStoryChapters,
     getStoryDownload,
     getListStory
-    // fetchStoryDetail,
 };

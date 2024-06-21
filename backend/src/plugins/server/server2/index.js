@@ -24,12 +24,13 @@ const getStoryContent = async (req, res) => {
   try {
     const numberChapter = req.params.numChapter;
     const _title = req.params.title;
+
+
     const url = `${BASE_URL}/doc-truyen/${_title}/${numberChapter}`;
     console.log('URL:', url);
     const html = await fetchHTML(url);
 
     const $ = cheerio.load(html);
-
     let header = $('.chapter.col-xs-12:first');
     let content = $('.chapter-c-content').find('.box-chap:first').html();
     let title = header.find('.truyen-title').text();

@@ -1,8 +1,7 @@
-import React, { useEffect, useState } from "react"; 
+import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import "../../assets/styles/style.css";
 import { useTheme } from "../../assets/context/theme.context.js";
-
 
 const StoryBeingRead = () => {
   const [stories, setStories] = useState([]);
@@ -52,14 +51,14 @@ const StoryBeingRead = () => {
           backgroundColor: theme === "dark" ? "#DDF2FD" : "#1D3557",
           color: theme === "dark" ? "#000" : "#fff",
           fontWeight: "bold",
-          minHeight:"0px",
+          minHeight: "0px",
           overflowY: 'auto', // Enable vertical scrolling
           padding: '10px', // Optional padding
           borderRadius: '8px', // Optional for aesthetics
         }}
       >
         <ul>
-          {stories.map((story) => (
+          {[...stories].reverse().map((story) => (
             <li
               key={story._title}
               onClick={() =>
@@ -83,4 +82,4 @@ const StoryBeingRead = () => {
   );
 };
 
-export default StoryBeingRead
+export default StoryBeingRead;

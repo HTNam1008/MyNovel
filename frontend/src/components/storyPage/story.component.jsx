@@ -43,7 +43,6 @@ function Story({ chapterId, title, numChapter }) {
       }
     }
   }, [title]);
-
   // ----- get reading state from local storage end -----
 
   // ----- save reading state to local storage -----
@@ -151,25 +150,28 @@ function Story({ chapterId, title, numChapter }) {
 
   // ----- handle next and previous chapter -----
   const handleNextChapter = () => {
-    setChapterId((prevChapterId) => parseInt(prevChapterId) + 1);
-    setNumChapter((prevNumChapter) => {
-      let num = parseInt(prevNumChapter.split("-")[1]);
+    setChapterId((nextChapterId) => 
+      (parseInt(nextChapterId) + 1 == dataStory.chapter_next) ? parseInt(nextChapterId)+1 : 
+    (dataStory.chapter_next == null ? parseInt(nextChapterId) : dataStory.chapter_next));
+    
+    setNumChapter((nextNumChapter) => {
+      let num = parseInt(nextNumChapter.split("-")[1]);
       num += 1;
       return "chuong-" + num;
     });
   };
 
   const handlePreviousChapter = () => {
+    setChapterId((prevChapterId) =>
+    (parseInt(prevChapterId) - 1 == dataStory.chapter_prev) ? parseInt(prevChapterId)-1 : 
+    (dataStory.chapter_prev == null ? parseInt(prevChapterId) : dataStory.chapter_prev));
+  
     setNumChapter((prevNumChapter) => {
       let num = parseInt(prevNumChapter.split("-")[1]);
       num = num > 1 ? num - 1 : 1;
       return "chuong-" + num;
     });
-
-    setChapterId((prevChapterId) =>
-      (parseInt(dataStory.chapter_prev) === null || parseInt(_numChapter.split("-")[1]) > 1) ? parseInt(prevChapterId) - 1 : parseInt(prevChapterId)
-    );
-  };
+    };
   // ----- handle next and previous chapter end -----
 
   const navigationButtons = (
