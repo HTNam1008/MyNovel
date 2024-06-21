@@ -15,9 +15,8 @@ import useStoryFetching from "../../services/story.service.js";
 import WebSocketService from "../../services/webSocket.service.js";
 import { useServer } from "../../assets/context/server.context.js";
 import Settings from "../../utils/setting.js";
-
 function Story({ chapterId, title, numChapter }) {
-
+  
   // ----- get server default -----
   const { selectedServer } = useServer();
   const [_selectedServer, _setSelectedServer] = useState(selectedServer);
@@ -31,19 +30,50 @@ function Story({ chapterId, title, numChapter }) {
   const { dataStory, loadingStory } = useStoryFetching(storyUrl);
   // ----- get data from API end -----
 
-  // ----- get reading state from local storage -----
-  useEffect(() => {
-    const savedState =
-      JSON.parse(localStorage.getItem("currentReadingState")) || [];
-    if (Array.isArray(savedState)) {
-      const currentStory = savedState.find((story) => story._title === title);
-      if (currentStory) {
-        setChapterId(currentStory._chapterId);
-        setNumChapter(currentStory._numChapter);
-      }
+ // ----- handle change color button server -----
+ const [activeServer, setActiveServer] = useState(_selectedServer);
+
+ const handlePluginClick = (pluginName) => {
+   _setSelectedServer(pluginName);
+   setActiveServer(pluginName);
+ };
+ // ----- handle change color button server end-----
+
+// ----- StorySelector component -----
+const [isOpenModal, setIsOpenModal] = useState(false);
+const [_currentStory, setCurrentStory] = useState(null);
+
+useEffect(() => {
+  const savedState =
+    JSON.parse(localStorage.getItem("currentReadingState")) || [];
+  if (Array.isArray(savedState)) {
+    const currentStory = savedState.find((story) => story._title === title);
+    if (currentStory) {
+      setCurrentStory(currentStory);
+      console.log(currentStory);
+      setIsOpenModal(true);
     }
-  }, [title]);
-  // ----- get reading state from local storage end -----
+    else {
+      setIsOpenModal(false);
+    }
+  }
+}, [title]);
+
+const handleContinue = (currentStory) => {
+  if (_selectedServer !== currentStory._selectedServer) {
+    _setSelectedServer(currentStory._selectedServer)
+    setActiveServer(currentStory._selectedServer);
+  }  
+  setChapterId(currentStory._chapterId);
+  setNumChapter(currentStory._numChapter);
+  setIsOpenModal(false);
+
+};
+const handleStartOver = () => {
+  setIsOpenModal(false);
+};
+
+// ----- StorySelector component end -----
 
   // ----- save reading state to local storage -----
   useEffect(() => {
@@ -56,12 +86,14 @@ function Story({ chapterId, title, numChapter }) {
       const updatedStories = storiesArray.filter(
         (story) => story._title !== title
       );
+
       updatedStories.push({
         title: dataStory?.story_name,
         numChapter: dataStory?.chapter_name,
         _title: title,
         _chapterId: _chapterId,
         _numChapter: _numChapter,
+        _selectedServer: _selectedServer,
       });
 
       // Remove oldest items if the array length exceeds 10
@@ -75,21 +107,14 @@ function Story({ chapterId, title, numChapter }) {
       );
     };
 
-    if (dataStory) {
-      saveStoryState();
+    if (dataStory) { 
+     saveStoryState();
     }
   }, [_chapterId, _numChapter, title, dataStory]);
 
   // ----- save reading state to local storage end -----
 
-  // ----- handle change color button server -----
-  const [activeServer, setActiveServer] = useState(_selectedServer);
-
-  const handlePluginClick = (pluginName) => {
-    _setSelectedServer(pluginName);
-    setActiveServer(pluginName);
-  };
-  // ----- handle change color button server end-----
+ 
 
   const clearReadingState = () => {
     localStorage.removeItem('currentReadingState');
@@ -228,10 +253,30 @@ function Story({ chapterId, title, numChapter }) {
     };
   }, []);
 
-  // ----- setting end -----
-
+  // ----- setting end ----
+  
+  
   return (
     <div>
+      ( isOpenModal ? 
+      <div>
+        <Modal isOpen={isOpenModal} onClose={() => setIsOpenModal(false)}>
+        <ModalOverlay />
+        <ModalContent>
+          <ModalHeader>Tiếp tục đọc</ModalHeader>
+          <ModalCloseButton />
+          <ModalBody>
+            <p>Bạn muốn tiếp tục đọc chương đã lưu hay đọc chương bạn đã chọn mới?</p>
+          </ModalBody>
+          <ModalFooter>
+            <Button onClick={()=>handleContinue(_currentStory)}>Tiếp tục</Button>
+            <Button onClick={() =>handleStartOver()} ml={3}>Bắt đầu lại</Button>
+          </ModalFooter>
+        </ModalContent>
+        </Modal>
+      </div>
+      : null
+      )
       <div
         style={{
           borderWidth:"20px",

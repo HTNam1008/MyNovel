@@ -58,7 +58,10 @@ const StoryBeingRead = () => {
         }}
       >
         <ul>
-          {[...stories].reverse().map((story) => (
+        {stories.length === 0 ? (
+          <li>Bạn chưa đọc truyện nào</li>
+        ) : (
+          [...stories].reverse().map((story) => (
             <li
               key={story._title}
               onClick={() =>
@@ -74,9 +77,12 @@ const StoryBeingRead = () => {
               <span>{story.title}</span>
               <span>&gt;</span>
               <span>{story.numChapter}</span>
+              <span>&gt;</span>
+              <span>{story._selectedServer}</span>
             </li>
-          ))}
-        </ul>
+          ))
+        )}
+      </ul>
       </div>
     </div>
   );
