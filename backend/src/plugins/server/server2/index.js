@@ -118,7 +118,7 @@ const getSearchStory = async (req, res) => {
     const $ = cheerio.load(html);
     const bookResults = [];
 
-    let title, authorName, bookUrl, imageUrl, intro, genre, is_full, chapters;
+    let title, authorName, bookUrl, imageUrl, intro,titleInUrl, genre, is_full, chapters;
     $('.main-content-wrap .rank-view-list li').each((index, element) => {
       title = $(element).find('.book-mid-info h4').text().trim();
       authorName = $(element).find('.book-mid-info .author .name').text().trim();
@@ -128,9 +128,9 @@ const getSearchStory = async (req, res) => {
       bookUrl = $(element).find('.book-mid-info h4 a').attr('href');
       imageUrl = $(element).find('.book-img-box img.lazy').attr('src');
       intro = $(element).find('.book-mid-info .intro').text().trim();
-
+      titleInUrl = bookUrl.substring(bookUrl.lastIndexOf("/"));
       bookResults.push({
-        
+          titleUrl: titleInUrl,
           title: title,
           author: authorName,
           image: imageUrl,

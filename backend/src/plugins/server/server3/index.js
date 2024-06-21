@@ -84,7 +84,7 @@ const getSearchStory = async (req, res) => {
       bookUrl = $(element)
         .find(" .col-span-9 .w-full .flex:first h3 a")
         .attr("href");
-      titleInUrl = BASE_URL + bookUrl.substring(bookUrl.lastIndexOf("/"));
+      titleInUrl = bookUrl.substring(bookUrl.lastIndexOf("/"));
       authorName = $(element)
         .find(".col-span-9 .w-full .flex:eq(1) span:last")
         .text();

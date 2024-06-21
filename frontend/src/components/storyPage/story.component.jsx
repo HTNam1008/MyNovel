@@ -91,11 +91,11 @@ function Story({ chapterId, title, numChapter }) {
   };
   // ----- handle change color button server end-----
 
-  // const clearReadingState = () => {
-  //   localStorage.removeItem('currentReadingState');
-  // };
+  const clearReadingState = () => {
+    localStorage.removeItem('currentReadingState');
+  };
 
-  // clearReadingState()
+  clearReadingState()
   
   // ----- get server plugin -----
   const [dataPlugins, setDataPlugins] = useState(null);

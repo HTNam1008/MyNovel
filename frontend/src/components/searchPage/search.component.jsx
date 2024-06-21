@@ -44,7 +44,7 @@ function Search({ title }) {
 
   const navigate = useNavigate();
 
-  const handleClick = (id) => {
+  const handleClick = (id, title) => {
     console.log("Item Click:", id);
     navigate(`/detail/${id}/${vietnameseToSlug(title)}`);
   };
